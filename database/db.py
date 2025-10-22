@@ -15,6 +15,8 @@ class Database:
             )
         except Exception as e:
             print(f"Error Database connect: {e}")
+        except:
+            print("Fatall except")
 
     @contextmanager
     def get_cursor(self):
