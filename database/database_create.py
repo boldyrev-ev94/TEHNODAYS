@@ -95,8 +95,6 @@ def main():
 
             cursor.execute(create_categories_table("categories"))
             print(f"✅ Таблица {"categories"} успешно создана")
-            input_data_category(cursor)
-            print(f"✅ Данные добавлены")
 
             data = get_table("categories", cursor)
             json_table = json.dumps(data, ensure_ascii=False, indent=2)
@@ -108,6 +106,9 @@ def main():
             data = get_table("user_category", cursor)
             json_table = json.dumps(data, ensure_ascii=False, indent=2)
             print(json_table)
+
+            input_data_category(cursor)
+            print(f"✅ Данные добавлены")
 
     except Exception as e:
         print(f"Ощибка: {e}")
