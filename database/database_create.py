@@ -1,5 +1,3 @@
-import psycopg2
-
 
 # Создание таблицы пользователей
 create_users_table = """
