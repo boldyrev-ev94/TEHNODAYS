@@ -19,9 +19,15 @@ def main():
     # exists = check_database_exists(
     #     'mydatabase', host='localhost', user='postgres', password=str(config.password.get_secret_value()))
     # print(f"База данных существует: {exists}")
-
+    # dsn = {
+    #     "dbname": config.name_bd,
+    #     "user": "name_bd",
+    #     "password": "your_password",
+    #     "host": config.host,
+    #     "port": "5432"
+    # }
     exists = check_database_exists(
-        config.name_bd,
+        dbname=config.name_bd,
         host=config.host,
         user=config.user,
         password=config.password.get_secret_value(),
