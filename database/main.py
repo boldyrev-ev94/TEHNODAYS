@@ -61,7 +61,7 @@ def check_database_exists(dsn):
 
         # Выполняем запрос к системному каталогу pg_database
         query = sql.SQL("SELECT COUNT(*) FROM pg_database WHERE datname = %s")
-        cursor.execute(query, (dbname,))
+        cursor.execute(query, dsn['dbname'])
 
         # Получаем результат
         result = cursor.fetchone()[0]
