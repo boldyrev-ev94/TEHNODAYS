@@ -266,12 +266,12 @@ function useDecryptedText(targetText, totalDuration=900, startDelay=0, glitchCol
 }
 
 /* ---------------- API cache ---------------- */
-const API_BASE='http://79.141.77.117/';
+const API_BASE='http://79.141.77.117:8000/';
 const useApiCache = ()=>{
   const cacheRef = useRef({});
   const controllersRef = useRef({});
   const fetchJson = async (path, opts={})=>{
-    const url = path.startsWith('http')? path : API_BASE+path.replace(/^\/+/,'');
+    const url = path.startsWith('http')? path : `${API_BASE}${path.replace(/^\/+/,'')}`;
     if(cacheRef.current[url] && !opts.force) return cacheRef.current[url];
     if(controllersRef.current[url]) try{controllersRef.current[url].abort();}catch(e){}
     const ctrl = new AbortController(); controllersRef.current[url]=ctrl;
@@ -294,7 +294,7 @@ const LeadersTable = () => {
     let mounted = true;
     const load = async ()=>{
       try{
-        const data = await api.fetchJson('api/leaders');
+        const data = await api.fetchJson('/api/leaders');
         if(!mounted) return;
         setRows(Array.isArray(data)?data:[]);
       }catch(e){ console.error(e); }
