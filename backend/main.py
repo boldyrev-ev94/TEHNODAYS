@@ -95,8 +95,7 @@ def get_category_top10(cat_id: int):
 
 @app.get("/api/leaders")
 def get_leaders():
-    # return LEADERS
-    return {"message": "Leaders data"}
+    return LEADERS
 
 
 @app.get("/api/esports")
