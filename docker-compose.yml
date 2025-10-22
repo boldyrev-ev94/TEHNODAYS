@@ -23,7 +23,7 @@ services:
 
   frontend:
     build:
-      context: ./frontent
+      context: ./frontend
     networks:
       - dev
 
