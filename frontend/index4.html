@@ -265,37 +265,31 @@ function useDecryptedText(targetText, totalDuration=900, startDelay=0, glitchCol
   return display;
 }
 
-/* ---------------- API ---------------- */
-const useApi = () => {
-  const controllersRef = React.useRef({});
-
-  const fetchJson = async (path, opts = {}) => {
-    const url = path.startsWith('/') ? path : '/' + path;
-
-    if (controllersRef.current[url]) {
-      try { controllersRef.current[url].abort(); } catch(e) {}
-    }
-
-    const ctrl = new AbortController();
-    controllersRef.current[url] = ctrl;
-
-    try {
-      const res = await fetch(url, { signal: ctrl.signal, ...opts });
-      if (!res.ok) throw new Error('Fetch error: ' + res.status);
+/* ---------------- API cache ---------------- */
+const API_BASE='http://79.141.77.117/';
+const useApiCache = ()=>{
+  const cacheRef = useRef({});
+  const controllersRef = useRef({});
+  const fetchJson = async (path, opts={})=>{
+    const url = path.startsWith('http')? path : API_BASE+path.replace(/^\/+/,'');
+    if(cacheRef.current[url] && !opts.force) return cacheRef.current[url];
+    if(controllersRef.current[url]) try{controllersRef.current[url].abort();}catch(e){}
+    const ctrl = new AbortController(); controllersRef.current[url]=ctrl;
+    try{
+      const res = await fetch(url,{signal:ctrl.signal});
+      if(!res.ok) throw new Error('Fetch error: '+res.status);
       const data = await res.json();
-      return data;
-    } finally {
-      delete controllersRef.current[url];
-    }
+      cacheRef.current[url]=data; return data;
+    }finally{ delete controllersRef.current[url]; }
   };
-
-  return { fetchJson };
+  const prefetch = (path)=>{ fetchJson(path).catch(()=>{}); };
+  return {fetchJson,prefetch,clear:()=>{cacheRef.current={};}};
 };
 
 /* ---------------- LEADERS ---------------- */
 const LeadersTable = () => {
   const [rows,setRows] = useState([]);
-  const api = useApi();
+  const api = useApiCache();
   useEffect(()=>{
     let mounted = true;
     const load = async ()=>{
@@ -306,7 +300,7 @@ const LeadersTable = () => {
       }catch(e){ console.error(e); }
     };
     load();
-    const interval = setInterval(load,30000);
+    const interval = setInterval(load,300000);
     return ()=>{ mounted=false; clearInterval(interval); };
   }, []);
   return (
@@ -337,7 +331,7 @@ const RotatingTop10 = () => {
   const [categories,setCategories]=useState([]);
   const [idx,setIdx]=useState(0);
   const [items,setItems]=useState([]);
-  const api = useApi();
+  const api = useApiCache();
   const decrypted = useDecryptedText(categories[idx]?.name || '—');
 
   useEffect(()=>{
@@ -362,6 +356,7 @@ const RotatingTop10 = () => {
       const data = await api.fetchJson(path);
       if(!mounted) return;
       setItems(Array.isArray(data)?data.slice(0,10):[]);
+      api.prefetch(`api/categories/${categories[(idx+1)%categories.length]?.id}/top10`);
     };
     loadItems();
     return ()=>{ mounted=false; };
@@ -369,7 +364,7 @@ const RotatingTop10 = () => {
 
   useEffect(()=>{
     if(!categories.length) return;
-    const timer=setInterval(()=>setIdx(prev=>(prev+1)%categories.length),30000);
+    const timer=setInterval(()=>setIdx(prev=>(prev+1)%categories.length),3000);
     return ()=> clearInterval(timer);
   }, [categories.length]);
 
@@ -400,7 +395,7 @@ const RotatingTop10 = () => {
 const EsportsTable = () => {
   const [categories,setCategories]=useState([]);
   const [dataByCat,setDataByCat]=useState({});
-  const api = useApi();
+  const api = useApiCache();
   const activeCat=0;
 
   useEffect(()=>{
