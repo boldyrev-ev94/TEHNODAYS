@@ -46,7 +46,7 @@ def main():
             cursor.execute(create_users_table("users"))
             cursor.execute(get_table("users"))
             rows = cursor.fetchall()
-            title = [row.key() for row in rows]
+            title = [row[0] for row in rows.description]
             print(title)
             users = [json.dumps(User(*row).__dict__) for row in rows]
             print(users)
