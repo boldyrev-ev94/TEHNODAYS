@@ -271,7 +271,7 @@ const useApiCache = ()=>{
   const cacheRef = useRef({});
   const controllersRef = useRef({});
   const fetchJson = async (path, opts={})=>{
-    const url = path.startsWith('http')? path : `${path.replace(/^\/+/,'')}`;
+    const url = `/${path.replace(/^\/+/,'')}`;
     if(cacheRef.current[url] && !opts.force) return cacheRef.current[url];
     if(controllersRef.current[url]) try{controllersRef.current[url].abort();}catch(e){}
     const ctrl = new AbortController(); controllersRef.current[url]=ctrl;
