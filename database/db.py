@@ -9,7 +9,7 @@ class Database:
             self.connection = psycopg2.connect(
                 dbname=config.name_db,
                 user=config.user,
-                password=config.password,
+                password=config.password.get_secret_value(),
                 host=config.host,
                 port=config.port
             )
