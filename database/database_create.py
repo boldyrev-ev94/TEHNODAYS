@@ -68,18 +68,24 @@ def input_data_category(cursor):
         ("Тетрис", "value", "cyber_zone")
     ]
     try:
-        cursor.executemany(
-            "INSERT INTO categories (name, property, type)"
-            "VALUES (%s, %s, %s)"
-            "RETURNING id",
-            data_list
-        )
-        inserted_ids = [row[0] for row in cursor.fetchall()]
-        print(inserted_ids)
-
+        db = Database()
+        with db.get_cursor() as cursor:
+            cursor.executemany(
+                "INSERT INTO categories (name, property, type)"
+                "VALUES (%s, %s, %s)"
+                "RETURNING id",
+                data_list
+            )
+            # inserted_ids = [row[0] for row in cursor.fetchall()]
+            # print(inserted_ids)
+            data = get_table("categories", cursor)
+            json_table = json.dumps(data, ensure_ascii=False, indent=2)
+            print(json_table)
     except Exception as e:
         connection.rollback()
         print(f"Ошибка при массовой вставке: {e}")
+    finally:
+        db.close()
 
 
 def main():
@@ -106,14 +112,12 @@ def main():
             data = get_table("user_category", cursor)
             json_table = json.dumps(data, ensure_ascii=False, indent=2)
             print(json_table)
-
-            input_data_category(cursor)
-            print(f"✅ Данные добавлены")
-
     except Exception as e:
         print(f"Ощибка: {e}")
     finally:
         db.close()
+    input_data_category()
+    print(f"✅ Данные добавлены")
 
 
 def get_table(table_name, cursor):
