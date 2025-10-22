@@ -300,7 +300,7 @@ const LeadersTable = () => {
       }catch(e){ console.error(e); }
     };
     load();
-    const interval = setInterval(load,30000);
+    const interval = setInterval(load,300000);
     return ()=>{ mounted=false; clearInterval(interval); };
   }, []);
   return (
