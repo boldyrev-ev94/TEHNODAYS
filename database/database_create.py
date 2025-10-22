@@ -81,6 +81,7 @@ def get_table(table_name, cursor):
         # Преобразуем в список словарей
         data = [dict(zip(column_names, row)) for row in rows]
         resaut = {
+            "name_tabel": table_name,
             "columns": column_names,
             "data": data
         }
