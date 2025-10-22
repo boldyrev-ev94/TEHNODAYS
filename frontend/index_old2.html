@@ -265,36 +265,43 @@ function useDecryptedText(targetText, totalDuration=900, startDelay=0, glitchCol
   return display;
 }
 
-/* ---------------- API cache ---------------- */
-const API_BASE='http://79.141.77.117:8000/';
-const useApiCache = ()=>{
-  const cacheRef = useRef({});
-  const controllersRef = useRef({});
-  const fetchJson = async (path, opts={})=>{
-    const url = path.startsWith('http')? path : API_BASE+path.replace(/^\/+/,'');
-    if(cacheRef.current[url] && !opts.force) return cacheRef.current[url];
-    if(controllersRef.current[url]) try{controllersRef.current[url].abort();}catch(e){}
-    const ctrl = new AbortController(); controllersRef.current[url]=ctrl;
-    try{
-      const res = await fetch(url,{signal:ctrl.signal});
-      if(!res.ok) throw new Error('Fetch error: '+res.status);
+/* ---------------- API ---------------- */
+const useApi = () => {
+  const controllersRef = React.useRef({});
+
+  const fetchJson = async (path, opts = {}) => {
+    const url = path.startsWith('/') ? path : '/' + path;
+
+    // Отмена предыдущего запроса, если он еще выполняется
+    if (controllersRef.current[url]) {
+      try { controllersRef.current[url].abort(); } catch(e) {}
+    }
+
+    const ctrl = new AbortController();
+    controllersRef.current[url] = ctrl;
+
+    try {
+      const res = await fetch(url, { signal: ctrl.signal, ...opts });
+      if (!res.ok) throw new Error('Fetch error: ' + res.status);
       const data = await res.json();
-      cacheRef.current[url]=data; return data;
-    }finally{ delete controllersRef.current[url]; }
+      return data;
+    } finally {
+      delete controllersRef.current[url];
+    }
   };
-  const prefetch = (path)=>{ fetchJson(path).catch(()=>{}); };
-  return {fetchJson,prefetch,clear:()=>{cacheRef.current={};}};
+
+  return { fetchJson };
 };
 
 /* ---------------- LEADERS ---------------- */
 const LeadersTable = () => {
   const [rows,setRows] = useState([]);
-  const api = useApiCache();
+  const api = useApi();
   useEffect(()=>{
     let mounted = true;
     const load = async ()=>{
       try{
-        const data = await api.fetchJson('api/leaders');
+        const data = await api.fetchJson('/api/leaders');
         if(!mounted) return;
         setRows(Array.isArray(data)?data:[]);
       }catch(e){ console.error(e); }
@@ -331,7 +338,7 @@ const RotatingTop10 = () => {
   const [categories,setCategories]=useState([]);
   const [idx,setIdx]=useState(0);
   const [items,setItems]=useState([]);
-  const api = useApiCache();
+  const api = useApi();
   const decrypted = useDecryptedText(categories[idx]?.name || '—');
 
   useEffect(()=>{
@@ -395,7 +402,7 @@ const RotatingTop10 = () => {
 const EsportsTable = () => {
   const [categories,setCategories]=useState([]);
   const [dataByCat,setDataByCat]=useState({});
-  const api = useApiCache();
+  const api = useApi();
   const activeCat=0;
 
   useEffect(()=>{
