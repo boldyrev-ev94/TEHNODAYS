@@ -45,11 +45,16 @@ def main():
         with db.get_cursor() as cursor:
             cursor.execute(create_users_table("users"))
             cursor.execute(get_table("users"))
-            rows = cursor.fetchall()
-            title = [desc[0] for desc in cursor.description]
-            print(title)
-            users = [json.dumps(User(*row).__dict__) for row in rows]
+            data = cursor.fetchall()
+            columns = [desc[0] for desc in cursor.description]
+            print(columns)
+            users = [json.dumps(User(*row).__dict__) for row in data]
             print(users)
+            result = {
+                "columns": columns,
+                "data": data
+            }
+
             # cursor.execute(create_categories_table)
             # cursor.execute(create_user_categories_table)
             print("✅ Таблицы успешно созданы")
