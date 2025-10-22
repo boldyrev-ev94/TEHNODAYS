@@ -1,6 +1,7 @@
 import psycopg2
 from contextlib import contextmanager
 from config_reader import config
+from psycopg2 import OperationalError, InterfaceError
 
 
 class Database:
@@ -14,20 +15,41 @@ class Database:
                 port=config.port_db
             )
             print("Коннект прошел успешно!")
-        except Exception as e:
-            print(f"Error Database connect: {e}")
-        except:
-            print("Fatall except")
+        except OperationalError as e:
+            print(f"Ошибка подключения к БД: {e}")
+            self.connection = None
 
     @contextmanager
     def get_cursor(self):
-        with self.connection.cursor() as cursor:
+        if not self.connection or self.connection.closed:
+            raise Exception("Соединение с БД закрыто")
+
+        try:
+            with self.connection.cursor() as cursor:
+                try:
+                    yield cursor
+                finally:
+                    try:
+                        self.connection.commit()
+                    except InterfaceError:
+                        # Если соединение уже закрыто, просто пропускаем
+                        pass
+        except Exception as e:
             try:
-                yield cursor
-                self.connection.commit()
-            except Exception as e:
                 self.connection.rollback()
-                raise e
+            except InterfaceError:
+                pass
+            raise e
+        finally:
+            # Проверка состояния соединения
+            if self.connection and not self.connection.closed:
+                print("Соединение активно")
+            else:
+                print("Соединение закрыто")
 
     def close(self):
-        self.connection.close()
+        if self.connection and not self.connection.closed:
+            try:
+                self.connection.close()
+            except InterfaceError:
+                pass
