@@ -82,7 +82,6 @@ def input_data_category(cursor):
             json_table = json.dumps(data, ensure_ascii=False, indent=2)
             print(json_table)
     except Exception as e:
-        connection.rollback()
         print(f"Ошибка при массовой вставке: {e}")
     finally:
         db.close()
