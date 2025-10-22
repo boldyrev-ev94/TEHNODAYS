@@ -5,13 +5,16 @@ from config_reader import config
 
 class Database:
     def __init__(self):
-        self.connection = psycopg2.connect(
-            dbname=config.name_db,
-            user=config.user,
-            password=config.password.get_secret_value(),
-            host=config.host,
-            port=config.port
-        )
+        try:
+            self.connection = psycopg2.connect(
+                dbname=config.name_db,
+                user=config.user,
+                password=config.password,
+                host=config.host,
+                port=config.port
+            )
+        except OperationalError as e:
+            print(f"Ошибка подключения к базе данных: {e}")
 
     @contextmanager
     def get_cursor(self):
