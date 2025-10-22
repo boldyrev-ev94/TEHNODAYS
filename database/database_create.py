@@ -69,14 +69,14 @@ def main():
             cursor.execute(create_categories_table("categories"))
             print(f"✅ Таблица {"categories"} успешно создана")
 
-            data = get_table("users", cursor)
+            data = get_table("categories", cursor)
             json_table = json.dumps(data, ensure_ascii=False, indent=2)
             print(json_table)
 
             cursor.execute(create_user_categories_table("user_category"))
             print(f"✅ Таблица {"user_category"} успешно создана")
 
-            data = get_table("users", cursor)
+            data = get_table("user_category", cursor)
             json_table = json.dumps(data, ensure_ascii=False, indent=2)
             print(json_table)
 
