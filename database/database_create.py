@@ -80,7 +80,11 @@ def get_table(table_name, cursor):
         rows = cursor.fetchall()
         # Преобразуем в список словарей
         data = [dict(zip(column_names, row)) for row in rows]
-        return data
+        resaut = {
+            "columns": column_names,
+            "data": data
+        }
+        return resaut
     except Exception as e:
         print(f"Ошибка при получении данных: {e}")
         return None
