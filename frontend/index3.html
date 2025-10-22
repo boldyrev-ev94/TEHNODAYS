@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<title>Технопредки</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  font-family: monospace;
+  color: white;
+}
+
+@keyframes boxScaleOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.8); opacity: 0; } }
+@keyframes boxScaleIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+.appRoot {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.card {
+  backdrop-filter: blur(5px);
+  border-radius: 12px;
+  padding: 14px;
+  border: 3px solid rgba(255,255,255,0.12);
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.leftColumn {
+  flex: 2;
+  min-width: 420px;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+}
+
+.rightColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rightTop, .rightBottom {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.tableWrapper {
+  flex: 1;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+
+.sectionHeader {
+  font-size: 28px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+table.leadersTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 16px;
+  color: white;
+}
+
+table.leadersTable th, table.leadersTable td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px dashed rgba(255,255,255,0.06);
+  font-family: monospace;
+}
+
+table.leadersTable th {
+  position: sticky;
+  top: 0;
+  backdrop-filter: blur(6px);
+  background: rgba(0,0,0,0.4);
+  z-index: 2;
+  font-weight: bold;
+}
+
+.smallTable td, .smallTable th { padding: 6px 8px; font-size: 14px; }
+
+.tr-first {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.categoryLabel {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 3px solid;
+  display: inline-block;
+}
+
+canvas { position: absolute; inset: 0; z-index: 1; }
+
+.rightColumn .card { border-color: rgba(255,255,255,0.08); }
+</style>
+
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useEffect, useRef, useState } = React;
+
+/* ---------------- LetterGlitch фон ---------------- */
+const LetterGlitch = ({glitchColors=['#2b4539','#61dca3','#61b3dc'], glitchSpeed=20, characters='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$&*()-_+=/[]{};:<>.,'}) => {
+  const canvasRef = useRef(null);
+  const letters = useRef([]);
+  const context = useRef(null);
+  const grid = useRef({columns:0, rows:0});
+  const lastGlitchTime = useRef(Date.now());
+  const charWidth = 10, charHeight = 20;
+  const lettersArr = Array.from(characters);
+
+  const getRandomChar = () => lettersArr[Math.floor(Math.random()*lettersArr.length)];
+  const getRandomColor = () => glitchColors[Math.floor(Math.random()*glitchColors.length)];
+  const hexToRgb = (hex) => {
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i,(m,r,g,b)=> r+r+g+g+b+b);
+    const res = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return res ? {r:parseInt(res[1],16), g:parseInt(res[2],16), b:parseInt(res[3],16)} : null;
+  };
+  const interpolateColor = (start,end,factor)=>{
+    const r=Math.round(start.r + (end.r-start.r)*factor);
+    const g=Math.round(start.g + (end.g-start.g)*factor);
+    const b=Math.round(start.b + (end.b-start.b)*factor);
+    return `rgb(${r},${g},${b})`;
+  };
+
+  const calculateGrid = (w,h)=>({columns:Math.ceil(w/charWidth), rows:Math.ceil(h/charHeight)});
+  const initializeLetters = (cols, rows)=>{
+    grid.current = {columns:cols, rows};
+    const total = cols*rows;
+    letters.current = Array.from({length:total},()=>({char:getRandomChar(), color:getRandomColor(), targetColor:getRandomColor(), colorProgress:1}));
+  };
+
+  const resizeCanvas = ()=>{
+    const canvas = canvasRef.current;
+    if(!canvas) return;
+    const parent = canvas.parentElement;
+    const dpr = window.devicePixelRatio||1;
+    const rect = parent.getBoundingClientRect();
+    canvas.width = rect.width*dpr;
+    canvas.height = rect.height*dpr;
+    canvas.style.width = rect.width+'px';
+    canvas.style.height = rect.height+'px';
+    context.current?.setTransform(dpr,0,0,dpr,0,0);
+    initializeLetters(calculateGrid(rect.width,rect.height).columns, calculateGrid(rect.width,rect.height).rows);
+  };
+
+  const drawLetters = ()=>{
+    if(!context.current || !letters.current.length) return;
+    const ctx = context.current;
+    const {width,height} = canvasRef.current.getBoundingClientRect();
+    ctx.clearRect(0,0,width,height);
+    ctx.font=`16px monospace`;
+    ctx.textBaseline='top';
+    letters.current.forEach((l,i)=>{
+      const x = (i%grid.current.columns)*charWidth;
+      const y = Math.floor(i/grid.current.columns)*charHeight;
+      ctx.fillStyle = l.color;
+      ctx.fillText(l.char,x,y);
+    });
+  };
+
+  const updateLetters = ()=>{
+    const count = Math.max(1, Math.floor(letters.current.length*0.05));
+    for(let i=0;i<count;i++){
+      const index = Math.floor(Math.random()*letters.current.length);
+      const l = letters.current[index];
+      l.char = getRandomChar();
+      l.targetColor = getRandomColor();
+      l.colorProgress = 0;
+    }
+  };
+
+  const handleTransitions = ()=>{
+    let redraw = false;
+    letters.current.forEach(l=>{
+      if(l.colorProgress<1){
+        l.colorProgress+=0.05;
+        if(l.colorProgress>1) l.colorProgress=1;
+        const startRgb = hexToRgb(l.color);
+        const endRgb = hexToRgb(l.targetColor);
+        if(startRgb && endRgb){
+          l.color = interpolateColor(startRgb,endRgb,l.colorProgress);
+          redraw = true;
+        }
+      }
+    });
+    if(redraw) drawLetters();
+  };
+
+  const animate = ()=>{
+    const now = Date.now();
+    if(now - lastGlitchTime.current >= glitchSpeed){
+      updateLetters(); drawLetters(); lastGlitchTime.current = now;
+    }
+    handleTransitions();
+    requestAnimationFrame(animate);
+  };
+
+  useEffect(()=>{
+    const canvas = canvasRef.current;
+    context.current = canvas.getContext('2d');
+    resizeCanvas();
+    animate();
+    window.addEventListener('resize', resizeCanvas);
+    return ()=> window.removeEventListener('resize', resizeCanvas);
+  }, []);
+
+  return <canvas ref={canvasRef} style={{display:'block', width:'100%', height:'100%'}} />;
+};
+
+/* ---------------- Эффект «раскодировки» текста ---------------- */
+function useDecryptedText(targetText, totalDuration=900, startDelay=0, glitchColors=['#2b4539','#61dca3','#61b3dc']){
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()[]{};:<>.,/?+-_';
+  const [display, setDisplay] = useState([]);
+  useEffect(()=>{
+    const textArr = Array.from(targetText || '');
+    if(!textArr.length){ setDisplay([]); return; }
+    const startTime = Date.now() + startDelay;
+    const revealTimes = textArr.map(()=> startTime + Math.random()*totalDuration);
+    let raf = null;
+    const getRandomChar = ()=> chars[Math.floor(Math.random()*chars.length)];
+    const getRandomColor = ()=> glitchColors[Math.floor(Math.random()*glitchColors.length)];
+    const update = ()=>{
+      const now = Date.now();
+      const letters = textArr.map((c,i)=> now>=revealTimes[i] ? {char:c,color:'white'} : {char:getRandomChar(),color:getRandomColor()});
+      setDisplay(letters);
+      if(!letters.every((l,i)=>l.char===textArr[i])) raf = requestAnimationFrame(update);
+    };
+    raf = requestAnimationFrame(update);
+    return ()=> raf && cancelAnimationFrame(raf);
+  }, [targetText]);
+  return display;
+}
+
+/* ---------------- API cache ---------------- */
+const API_BASE='http://79.141.77.117:8000/';
+const useApiCache = ()=>{
+  const cacheRef = useRef({});
+  const controllersRef = useRef({});
+  const fetchJson = async (path, opts={})=>{
+    const url = path.startsWith('http')? path : API_BASE+path.replace(/^\/+/,'');
+    if(cacheRef.current[url] && !opts.force) return cacheRef.current[url];
+    if(controllersRef.current[url]) try{controllersRef.current[url].abort();}catch(e){}
+    const ctrl = new AbortController(); controllersRef.current[url]=ctrl;
+    try{
+      const res = await fetch(url,{signal:ctrl.signal});
+      if(!res.ok) throw new Error('Fetch error: '+res.status);
+      const data = await res.json();
+      cacheRef.current[url]=data; return data;
+    }finally{ delete controllersRef.current[url]; }
+  };
+  const prefetch = (path)=>{ fetchJson(path).catch(()=>{}); };
+  return {fetchJson,prefetch,clear:()=>{cacheRef.current={};}};
+};
+
+/* ---------------- LEADERS ---------------- */
+const LeadersTable = () => {
+  const [rows,setRows] = useState([]);
+  const api = useApiCache();
+  useEffect(()=>{
+    let mounted = true;
+    const load = async ()=>{
+      try{
+        const data = await api.fetchJson('api/leaders');
+        if(!mounted) return;
+        setRows(Array.isArray(data)?data:[]);
+      }catch(e){ console.error(e); }
+    };
+    load();
+    const interval = setInterval(load,300000);
+    return ()=>{ mounted=false; clearInterval(interval); };
+  }, []);
+  return (
+    <div className="card leftColumn" style={{borderColor:'#61dca3'}}>
+      <div className="sectionHeader"><span className="categoryLabel" style={{borderColor:'#61dca3'}}>Лидеры — все категории</span></div>
+      <div className="tableWrapper" style={{flex:1}}>
+        <table className="leadersTable">
+          <thead><tr><th>#</th><th>Игрок / Участник</th><th>Категория</th><th>Значение</th></tr></thead>
+          <tbody>
+            {rows.length===0 && <tr><td colSpan="4">Нет данных.</td></tr>}
+            {rows.map((r,idx)=>(
+              <tr key={idx} className={idx===0?'tr-first':''}>
+                <td>{r.rank ?? (idx+1)}</td>
+                <td>{r.name ?? r.player ?? '—'}</td>
+                <td>{r.category ?? r.cat ?? '—'}</td>
+                <td>{(r.score!==undefined)?r.score:(r.value??'—')}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+/* ---------------- ROTATING TOP10 ---------------- */
+const RotatingTop10 = () => {
+  const [categories,setCategories]=useState([]);
+  const [idx,setIdx]=useState(0);
+  const [items,setItems]=useState([]);
+  const api = useApiCache();
+  const decrypted = useDecryptedText(categories[idx]?.name || '—');
+
+  useEffect(()=>{
+    let mounted=true;
+    const load = async ()=>{
+      const data = await api.fetchJson('api/categories');
+      if(!mounted) return;
+      setCategories(Array.isArray(data)?data:[]);
+    };
+    load();
+    const interval = setInterval(load,60000);
+    return ()=>{ mounted=false; clearInterval(interval); };
+  }, []);
+
+  useEffect(()=>{
+    if(!categories.length) return;
+    let mounted=true;
+    const loadItems = async ()=>{
+      const cat=categories[idx];
+      if(!cat) return;
+      const path = `api/categories/${cat.id}/top10`;
+      const data = await api.fetchJson(path);
+      if(!mounted) return;
+      setItems(Array.isArray(data)?data.slice(0,10):[]);
+      api.prefetch(`api/categories/${categories[(idx+1)%categories.length]?.id}/top10`);
+    };
+    loadItems();
+    return ()=>{ mounted=false; };
+  }, [idx, categories]);
+
+  useEffect(()=>{
+    if(!categories.length) return;
+    const timer=setInterval(()=>setIdx(prev=>(prev+1)%categories.length),3000);
+    return ()=> clearInterval(timer);
+  }, [categories.length]);
+
+  const borderColor = categories[idx]?.color || '#61dca3';
+  return (
+    <div className="card rightTop" style={{borderColor}}>
+      <div className="sectionHeader">
+        <div className="categoryLabel" style={{borderColor}}>
+          {decrypted.map((l,i)=><span key={i} style={{color:l.color}}>{l.char}</span>)}
+        </div>
+      </div>
+      <div className="tableWrapper" style={{flex:1}}>
+        <table className="leadersTable smallTable">
+          <thead><tr><th>#</th><th>Игрок</th><th>Значение</th></tr></thead>
+          <tbody>
+            {items.length===0 && <tr><td colSpan="3">Данных нет.</td></tr>}
+            {items.map((it,i)=>(
+              <tr key={i}><td>{i+1}</td><td>{it.name ?? it.player ?? '—'}</td><td>{it.score ?? it.value ?? '—'}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+/* ---------------- ESPORTS ---------------- */
+const EsportsTable = () => {
+  const [categories,setCategories]=useState([]);
+  const [dataByCat,setDataByCat]=useState({});
+  const api = useApiCache();
+  const activeCat=0;
+
+  useEffect(()=>{
+    let mounted=true;
+    const load = async ()=>{
+      const data = await api.fetchJson('api/esports');
+      if(!mounted) return;
+      if(data && data.categories && data.results){
+        setCategories(data.categories.slice(0,1));
+        setDataByCat(data.results);
+      }
+    };
+    load();
+    return ()=>{ mounted=false; };
+  }, []);
+
+  const rows = dataByCat[String(categories[activeCat]?.id)] || [];
+
+  return (
+    <div className="card rightBottom" style={{borderColor:'#61b3dc'}}>
+      <div className="sectionHeader">
+        <span className="categoryLabel" style={{borderColor:'#61b3dc'}}>Киберспорт</span>
+      </div>
+      <div className="tableWrapper" style={{flex:1}}>
+        <table className="leadersTable smallTable">
+          <thead><tr><th>#</th><th>Игрок</th><th>Значение</th></tr></thead>
+          <tbody>
+            {rows.length===0 && <tr><td colSpan="3">Данных нет.</td></tr>}
+            {rows.map((it,i)=>(
+              <tr key={i}>
+                <td>{i+1}</td>
+                <td>{it.player ?? '—'}</td>
+                <td>{it.score ?? '—'}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+/* ---------------- MAIN APP ---------------- */
+const App = () => {
+  return (
+    <div style={{position:'relative', width:'100vw', height:'100vh'}}>
+      <LetterGlitch />
+      <div className="appRoot" style={{position:'relative', zIndex: 5}}>
+        <LeadersTable />
+        <div className="rightColumn">
+          <RotatingTop10 />
+          <EsportsTable />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+
+</script>
+</body>
+</html>

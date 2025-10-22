@@ -1,40 +1,27 @@
-networks:
-  dev:
+version: "3.9"
 
 services:
+  backend:
+    build: ./backend
+    container_name: tehnodays-backend
+    networks:
+      - tehnodays-net
+    expose:
+      - "8000"
+
   nginx:
     image: nginx:stable-alpine
+    container_name: tehnodays-nginx
     ports:
       - "80:80"
-      - "443:443"
     volumes:
-      - './nginx.conf:/etc/nginx/nginx.conf'
+      - ./frontend/index.html:/usr/share/nginx/html/index.html:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - backend
-      - frontend
     networks:
-      - dev
+      - tehnodays-net
 
-  backend:
-    build:
-      context: ./backend
-    ports:
-      - "8000:8000"
-    networks:
-      - dev
-
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - "3000:3000"
-    networks:
-      - dev
-
-  # bot:
-  #   build:
-  #     context: bot
-  #   networks:
-  #     - dev
-
-      
+networks:
+  tehnodays-net:
+    driver: bridge
