@@ -44,16 +44,18 @@ def main():
         db = Database()
         with db.get_cursor() as cursor:
             cursor.execute(create_users_table("users"))
-            cursor.execute(get_table("users"))
-            data = cursor.fetchall()
-            columns = [desc[0] for desc in cursor.description]
-            print(columns)
-            users = [json.dumps(User(*row).__dict__) for row in data]
-            print(users)
-            result = {
-                "columns": columns,
-                "data": data
-            }
+            json_table = get_table("users", *cursor)
+            # cursor.execute(get_table("users"))
+            # data = cursor.fetchall()
+            # columns = [desc[0] for desc in cursor.description]
+            # print(columns)
+            # users = [json.dumps(User(*row).__dict__) for row in data]
+            # print(users)
+            # result = {
+            #     "columns": columns,
+            #     "data": data
+            # }
+            # print(result)
 
             # cursor.execute(create_categories_table)
             # cursor.execute(create_user_categories_table)
@@ -64,11 +66,24 @@ def main():
         db.close()
 
 
-def get_table(name_tabel):
-    sql_qestion = f"""
-SELECT * FROM {name_tabel}
-"""
-    return sql_qestion
+def get_table(table_name, cursor):
+    try:
+        # Выполняем запрос
+        cursor.execute(f"SELECT * FROM {table_name}")
+
+        # Получаем названия столбцов
+        column_names = [desc[0] for desc in cursor.description]
+
+        # Получаем данные
+        rows = cursor.fetchall()
+
+        # Преобразуем в список словарей
+        data = [dict(zip(column_names, row)) for row in rows]
+
+        return data
+    except Exception as e:
+        print(f"Ошибка при получении данных: {e}")
+        return None
 
 
 if __name__ == "__main__":
