@@ -70,26 +70,26 @@ html, body {
   overflow-x: hidden;
 }
 
-
 .sectionHeader {
-  font-size: 28px;
+  font-size: 45px;
   font-weight: bold;
   display: flex;
   align-items: center;
+  justify-content: center; /* <-- центрируем по горизонтали */
   gap: 10px;
 }
 
 table.leadersTable {
   width: 100%;
   border-collapse: collapse;
-  font-size: 16px;
+  font-size: 21px;
   color: white;
 }
 
 table.leadersTable th, table.leadersTable td {
-  padding: 8px 10px;
+  padding: 15px 10px;
   text-align: left;
-  border-bottom: 1px dashed rgba(255,255,255,0.06);
+  border-bottom: 1px dashed rgba(255,255,255,0.2);
   font-family: monospace;
 }
 
@@ -97,12 +97,12 @@ table.leadersTable th {
   position: sticky;
   top: 0;
   backdrop-filter: blur(6px);
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.1);
   z-index: 2;
   font-weight: bold;
 }
 
-.smallTable td, .smallTable th { padding: 6px 8px; font-size: 14px; }
+.smallTable td, .smallTable th { padding: 6px 8px; font-size: 21px; }
 
 .tr-first {
   font-size: 18px;
@@ -112,8 +112,10 @@ table.leadersTable th {
 .categoryLabel {
   padding: 6px 12px;
   border-radius: 8px;
-  border: 3px solid;
-  display: inline-block;
+  border: none;            /* убираем обводку */
+  display: block;          /* чтобы можно было центрировать */
+  text-align: center;      /* выравнивание текста по центру */
+  margin-bottom: 20px;
 }
 
 canvas { position: absolute; inset: 0; z-index: 1; }
