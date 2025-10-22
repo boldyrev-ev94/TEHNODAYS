@@ -69,7 +69,7 @@ def input_data_category(cursor):
     ]
     try:
         cursor.executemany(
-            "INSERT INTO categories (name, property, type) VALUES (%s, %s, %s)",
+            "INSERT INTO categories (name, property, type) VALUES (%s, %s, %s) RETURNING id",
             data_list
         )
     except Exception as e:
