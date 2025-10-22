@@ -43,24 +43,26 @@ CATEGORIES = [
 ]
 
 LEADERS = [
-    {"rank": 1, "name": "SMS-T", "category": "рекорд", "score": 123},
+    {"rank": 1, "name": "SMS-T", "category": "рекорд",
+        "score": 123, "user_name": "Игрок 1"},
     {"rank": 2, "name": "Карандаш кассета",
-        "category": "время (наименьшее)", "score": 45},
+        "category": "время (наименьшее)", "score": 45, "user_name": "Игрок 23"},
     {"rank": 3, "name": "Домашний телефон",
-        "category": "время (наименьшее)", "score": 30},
+        "category": "время (наименьшее)", "score": 30, "user_name": "Игрок 10"},
     {"rank": 4, "name": "Словарь без инета",
-        "category": "время (наименьшее)", "score": 25},
+        "category": "время (наименьшее)", "score": 25, "user_name": "Игрок 1"},
     {"rank": 5, "name": "Старый комп VS Новый",
-        "category": "рекорд", "score": 110},
+        "category": "рекорд", "score": 110, "user_name": "Игрок 11"},
     {"rank": 6, "name": "Железный конструктор",
-        "category": "время (наименьшее)", "score": 50},
+        "category": "время (наименьшее)", "score": 50, "user_name": "Игрок 9"},
     {"rank": 7, "name": "Перо VS ручка VS Граф.планшет",
-        "category": "время (наименьшее)", "score": 35},
+        "category": "время (наименьшее)", "score": 35, "user_name": "Игрок 12"},
     {"rank": 8, "name": "Перемотать ДВД",
-        "category": "время (наименьшее)", "score": 20},
+        "category": "время (наименьшее)", "score": 20, "user_name": "Игрок 1"},
     {"rank": 9, "name": "За рулём",
-        "category": "время (наибольшее)", "score": 99},
-    {"rank": 10, "name": "НТО", "category": "время (наименьшее)", "score": 15},
+        "category": "время (наибольшее)", "score": 99, "user_name": "Игрок 1"},
+    {"rank": 10, "name": "НТО",
+        "category": "время (наименьшее)", "score": 15, "user_name": "Игрок 1"},
 ]
 
 ESPORTS = {
@@ -96,6 +98,7 @@ def get_category_top10(cat_id: int):
 
 @app.get("/api/leaders")
 def get_leaders():
+
     return LEADERS
 
 
