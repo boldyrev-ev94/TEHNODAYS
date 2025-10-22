@@ -48,5 +48,5 @@ def get_category(idx: int, check: bool = False, etag: str = None):
     return {**cat, "etag": h}
 
 
-# if __name__ == "main":
-#     uvicorn.run(app, host="0.0.0.0", port=7000)
+if __name__ == "main":
+    uvicorn.run(app, host="0.0.0.0", port=7000)
