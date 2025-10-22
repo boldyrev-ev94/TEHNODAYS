@@ -7,13 +7,13 @@ class Database:
     def __init__(self):
         try:
             print(
-                f"{config.name_db, config.user, config.password.get_secret_value(), config.host, config.port}")
+                f"{config.name_db, config.user_db, config.password_db.get_secret_value(), config.host_db, config.port_db}")
             self.connection = psycopg2.connect(
                 dbname=config.name_db,
-                user=config.user,
-                password=config.password.get_secret_value(),
-                host=config.host,
-                port=config.port
+                user=config.user_db,
+                password=config.password_db.get_secret_value(),
+                host=config.host_db,
+                port=config.port_db
             )
         except Exception as e:
             print(f"Error Database connect: {e}")

@@ -7,10 +7,10 @@ class Settings(BaseSettings):
         env_file='.env', env_file_encoding='utf-8')
 
     name_db: str
-    password: SecretStr
-    user: str
-    host: str
-    port: str
+    password_db: SecretStr
+    user_db: str
+    host_db: str
+    port_db: str
 
 
 config = Settings()  # type: ignore
