@@ -4,8 +4,9 @@ from db import Database
 
 
 # Создание таблицы пользователей
-create_users_table = """
-CREATE TABLE IF NOT EXISTS users (
+def create_users_table(name_tabel):
+    res = f"""
+CREATE TABLE IF NOT EXISTS {name_tabel} (
     id SERIAL PRIMARY KEY,
     id_technopredki INTEGER NOT NULL,
     name VARCHAR(50) NOT NULL,
@@ -14,6 +15,8 @@ CREATE TABLE IF NOT EXISTS users (
     registrator_name VARCHAR(255)
 );
 """
+    return res
+
 
 # Создание таблицы категорий
 # *Не совсем понял про тип данных*
@@ -40,7 +43,13 @@ def main():
     try:
         db = Database()
         with db.get_cursor() as cursor:
-            cursor.execute(create_users_table)
+            cursor.execute(create_users_table("users"))
+            cursor.execute(get_table("users"))
+            rows = cursor.fetchall()
+            title = [row.key() for row in rows]
+            print(title)
+            users = [json.dumps(User(*row).__dict__) for row in rows]
+            print(users)
             # cursor.execute(create_categories_table)
             # cursor.execute(create_user_categories_table)
             print("✅ Таблицы успешно созданы")
@@ -48,6 +57,13 @@ def main():
         print(f"Ощибка: {e}")
     finally:
         db.close()
+
+
+def get_table(name_tabel):
+    sql_qestion = f"""
+SELECT * FROM {name_tabel}
+"""
+    return sql_qestion
 
 
 if __name__ == "__main__":
