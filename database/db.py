@@ -15,6 +15,7 @@ class Database:
                 host=config.host_db.lower(),
                 port=config.port_db
             )
+            print("Коннект прошел успешно!")
         except Exception as e:
             print(f"Error Database connect: {e}")
         except:
