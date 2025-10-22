@@ -294,7 +294,7 @@ const LeadersTable = () => {
     let mounted = true;
     const load = async ()=>{
       try{
-        const data = await api.fetchJson('api/leaders');
+        const data = await fetch('/api/leaders');
         if(!mounted) return;
         setRows(Array.isArray(data)?data:[]);
       }catch(e){ console.error(e); }
