@@ -322,8 +322,8 @@ const LeadersTable = () => {
             {rows.map((r,idx)=>(
               <tr key={idx} className={idx===0?'tr-first':''}>
                 <td>{r.rank ?? (idx+1)}</td>
-                <td>{r.name ?? r.player ?? '—'}</td>
-                <td>{r.category ?? r.cat ?? '—'}</td>
+                <td>{r.player ?? '—'}</td>
+                <td>{r.name ?? r.cat ?? '—'}</td>
                 <td>{(r.score!==undefined)?r.score:(r.value??'—')}</td>
               </tr>
             ))}
