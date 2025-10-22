@@ -1,3 +1,4 @@
+
 import psycopg2
 
 # Подключение к серверу PostgreSQL
@@ -42,15 +43,20 @@ CREATE TABLE IF NOT EXISTS user_categories (
 );
 """
 
-# Выполнение SQL создание таблиц
-cur.execute(create_users_table)
-cur.execute(create_categories_table)
-cur.execute(create_user_categories_table)
 
-# Подтверждаем
-conn.commit()
+async def main():
+    # Выполнение SQL создание таблиц
+    cur.execute(create_users_table)
+    cur.execute(create_categories_table)
+    cur.execute(create_user_categories_table)
+    # Подтверждаем
+    conn.commit()
 
-print("Таблицы успешно созданы")
+    print("Таблицы успешно созданы")
 
-cur.close()
-conn.close()
+    cur.close()
+    conn.close()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

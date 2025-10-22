@@ -1,7 +1,7 @@
 import asyncio
 from aiogram import Bot, Dispatcher
 from config_reader import config
-from handlers import main_menu, different_types
+from handlers import main_menu
 from aiogram.fsm.storage.memory import MemoryStorage
 storage = MemoryStorage()
 
