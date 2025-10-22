@@ -6,6 +6,8 @@ from config_reader import config
 class Database:
     def __init__(self):
         try:
+            print(
+                f"{config.name_db, config.user, config.password.get_secret_value(), config.host, config.port}")
             self.connection = psycopg2.connect(
                 dbname=config.name_db,
                 user=config.user,
