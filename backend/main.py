@@ -47,3 +47,7 @@ def get_category(idx: int, check: bool = False, etag: str = None):
     if check and etag == h:
         return {"notModified": True, "etag": h}
     return {**cat, "etag": h}
+
+
+if __name__ == "main":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
