@@ -19,13 +19,13 @@ def main():
     # exists = check_database_exists(
     #     'mydatabase', host='localhost', user='postgres', password=str(config.password.get_secret_value()))
     # print(f"База данных существует: {exists}")
-    # dsn = {
-    #     "dbname": config.name_bd,
-    #     "user": "name_bd",
-    #     "password": "your_password",
-    #     "host": config.host,
-    #     "port": "5432"
-    # }
+    dsn = {
+        "dbname": config.name_bd,
+        "user": config.user,
+        "password": config.password.get_secret_value(),
+        "host": config.host,
+        "port": "5432"
+    }
     exists = check_database_exists(
         dbname=config.name_bd,
         host=config.host,
@@ -47,10 +47,16 @@ def main():
     # conn.close()
 
 
-def check_database_exists(dbname, **kwargs):
+def check_database_exists(dsn):
     try:
         # Подключаемся к базе данных postgres (системная БД)
-        conn = psycopg2.connect(dbname, **kwargs)
+        conn = psycopg2.connect(
+            dbname=dsn['dbname'],
+            user=dsn['user'],
+            password=dsn['password'],
+            host=dsn['host'],
+            port="5432"
+        )
         cursor = conn.cursor()
 
         # Выполняем запрос к системному каталогу pg_database
