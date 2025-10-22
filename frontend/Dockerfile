@@ -7,7 +7,7 @@
 
 FROM nginx:stable-alpine
 
-# COPY --from=build /dist /user/share/nginx/html
+COPY index.html /user/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 3000
 
