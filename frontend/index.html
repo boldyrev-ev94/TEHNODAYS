@@ -364,7 +364,7 @@ const RotatingTop10 = () => {
 
   useEffect(()=>{
     if(!categories.length) return;
-    const timer=setInterval(()=>setIdx(prev=>(prev+1)%categories.length),3000);
+    const timer=setInterval(()=>setIdx(prev=>(prev+1)%categories.length),300000);
     return ()=> clearInterval(timer);
   }, [categories.length]);
 
