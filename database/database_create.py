@@ -14,7 +14,9 @@ CREATE TABLE IF NOT EXISTS {name_tabel} (
     name VARCHAR(50) NOT NULL,
     surname VARCHAR(50) NOT NULL,
     registrator_id VARCHAR(50),
-    registrator_name VARCHAR(255)
+    registrator_name VARCHAR(255),
+    date_registr TIMESTAMP,
+    CONSTRAINT chk_date_registr CHECK (date_registr >= '2000-01-01')
 );
 """
     return res
@@ -22,23 +24,35 @@ CREATE TABLE IF NOT EXISTS {name_tabel} (
 
 # Создание таблицы категорий
 # *Не совсем понял про тип данных*
-create_categories_table = """
-CREATE TABLE IF NOT EXISTS categories (
+def create_categories_table(name_tabel):
+    res = f"""
+CREATE TABLE IF NOT EXISTS {name_tabel} (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    value VARCHAR(100),
-    value_type VARCHAR(50) CHECK (value_type IN ('time', 'кол-во данных'))
+    name VARCHAR(150) NOT NULL,
+    property VARCHAR(50) CHECK (property IN ('time_up', 'time_down', 'value')) NOT NULL,
+    type VARCHAR(50) CHECK (property IN ('main_zone', 'cyber_zone', 'other_zone')) NOT NULL
 );
 """
+    return res
 
 # Создание таблицы связи категорий и пользователей
-create_user_categories_table = """
-CREATE TABLE IF NOT EXISTS user_categories (
+
+
+def create_user_categories_table(name_tabel):
+    res = f"""
+CREATE TABLE IF NOT EXISTS {name_tabel} (
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     category_id INT REFERENCES categories(id) ON DELETE CASCADE,
+    value VARCHAR(100),
     PRIMARY KEY (user_id, category_id)
 );
 """
+    return res
+
+
+def drop_tables():
+
+    return
 
 
 def main():
@@ -46,24 +60,26 @@ def main():
         db = Database()
         with db.get_cursor() as cursor:
             cursor.execute(create_users_table("users"))
+            print(f"✅ Таблицa {"users"} успешно создана")
+
             data = get_table("users", cursor)
             json_table = json.dumps(data, ensure_ascii=False, indent=2)
             print(json_table)
-            # cursor.execute(get_table("users"))
-            # data = cursor.fetchall()
-            # columns = [desc[0] for desc in cursor.description]
-            # print(columns)
-            # users = [json.dumps(User(*row).__dict__) for row in data]
-            # print(users)
-            # result = {
-            #     "columns": columns,
-            #     "data": data
-            # }
-            # print(result)
 
-            # cursor.execute(create_categories_table)
-            # cursor.execute(create_user_categories_table)
-            print("✅ Таблицы успешно созданы")
+            cursor.execute(create_categories_table("categories"))
+            print(f"✅ Таблица {"categories"} успешно создана")
+
+            data = get_table("users", cursor)
+            json_table = json.dumps(data, ensure_ascii=False, indent=2)
+            print(json_table)
+
+            cursor.execute(create_user_categories_table("user_category"))
+            print(f"✅ Таблица {"user_category"} успешно создана")
+
+            data = get_table("users", cursor)
+            json_table = json.dumps(data, ensure_ascii=False, indent=2)
+            print(json_table)
+
     except Exception as e:
         print(f"Ощибка: {e}")
     finally:
