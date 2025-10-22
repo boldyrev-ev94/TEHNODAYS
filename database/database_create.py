@@ -62,16 +62,21 @@ def input_data_category(cursor):
         ("Перемотать ДВД", "time_down", "main_zone"),
         ("За рулём", "time_up", "main_zone"),
         ("НТО", "time_down", "main_zone"),
-        ("НТО", "time_down", "cyber_zone"),
-        ("НТО", "value", "cyber_zone"),
-        ("НТО", "value", "cyber_zone"),
-        ("НТО", "value", "cyber_zone")
+        ("Гонки", "time_down", "cyber_zone"),
+        ("Пакман", "value", "cyber_zone"),
+        ("Fruit ninja", "value", "cyber_zone"),
+        ("Тетрис", "value", "cyber_zone")
     ]
     try:
         cursor.executemany(
-            "INSERT INTO categories (name, property, type) VALUES (%s, %s, %s) RETURNING id",
+            "INSERT INTO categories (name, property, type)"
+            "VALUES (%s, %s, %s)"
+            "RETURNING id",
             data_list
         )
+        inserted_ids = [row[0] for row in cursor.fetchall()]
+        print(inserted_ids)
+
     except Exception as e:
         connection.rollback()
         print(f"Ошибка при массовой вставке: {e}")
