@@ -1,10 +1,15 @@
+import psycopg2
+from psycopg2 import sql
+from db import Database
+
 
 # Создание таблицы пользователей
 create_users_table = """
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    id_technopredki VARCHAR(50),
-    name VARCHAR(255),
+    id_technopredki INTEGER NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    surname VARCHAR(50) NOT NULL,
     registrator_id VARCHAR(50),
     registrator_name VARCHAR(255)
 );
@@ -29,3 +34,21 @@ CREATE TABLE IF NOT EXISTS user_categories (
     PRIMARY KEY (user_id, category_id)
 );
 """
+
+
+def main():
+    try:
+        db = Database()
+        with db.get_cursor() as cursor:
+            cursor.execute(create_users_table)
+            # cursor.execute(create_categories_table)
+            # cursor.execute(create_user_categories_table)
+            conn.commit()
+            print("✅ Таблицы успешно созданы")
+        db.close()
+    except Exception as e:
+        print(f"Ощибка: {e}")
+
+
+if __name__ == "__main__":
+    main()
