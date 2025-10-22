@@ -44,7 +44,9 @@ def main():
         db = Database()
         with db.get_cursor() as cursor:
             cursor.execute(create_users_table("users"))
-            json_table = get_table("users", *cursor)
+            data = get_table("users", cursor)
+            json_table = json.dumps(data, ensure_ascii=False, indent=2)
+            print(json_table)
             # cursor.execute(get_table("users"))
             # data = cursor.fetchall()
             # columns = [desc[0] for desc in cursor.description]
@@ -70,16 +72,12 @@ def get_table(table_name, cursor):
     try:
         # Выполняем запрос
         cursor.execute(f"SELECT * FROM {table_name}")
-
         # Получаем названия столбцов
         column_names = [desc[0] for desc in cursor.description]
-
         # Получаем данные
         rows = cursor.fetchall()
-
         # Преобразуем в список словарей
         data = [dict(zip(column_names, row)) for row in rows]
-
         return data
     except Exception as e:
         print(f"Ошибка при получении данных: {e}")
