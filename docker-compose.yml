@@ -11,7 +11,7 @@ services:
       - './nginx.conf:/etc/nginx/nginx.conf'
     depends_on:
       - backend
-      - frontend
+      # - frontend
     networks:
       - dev
 
@@ -20,16 +20,17 @@ services:
       context: ./backend
     networks:
       - dev
-  frontend:
-    build:
-      context: ./frontent
-    networks:
-      - dev
 
-  bot:
-    build:
-      context: bot
-    networks:
-      - dev
+  # frontend:
+  #   build:
+  #     context: ./frontent
+  #   networks:
+  #     - dev
+
+  # bot:
+  #   build:
+  #     context: bot
+  #   networks:
+  #     - dev
 
       

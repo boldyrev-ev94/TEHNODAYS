@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import hashlib
-import json
 import uvicorn
 
 app = FastAPI()
