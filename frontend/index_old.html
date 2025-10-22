@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<title>Категории с загрузкой и prefetch</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  font-family: monospace;
+}
+
+@keyframes boxScaleOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.8); opacity: 0; } }
+@keyframes boxScaleIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+
+#dataBoxContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 320px;
+  max-width: 1000px;
+  width: auto;
+  padding: 35px;
+  border-radius: 16px;
+  backdrop-filter: blur(13px);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  color: white;
+  text-align: center;
+  z-index: 5;
+  height: auto;
+  max-height: 1000px;
+  overflow: hidden;
+  transition: max-height 10s ease-in-out;
+}
+
+.title { font-size: 40px; font-weight: bold; margin-bottom: 20px; }
+
+.itemsContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.categoryTitle {
+  font-size: 50px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  padding: 8px 20px;
+  border-radius: 8px;
+  color: white;
+  display: inline-block;
+  border: 3px solid;
+  min-width: 200px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.prevCategoryTitle {
+  font-size: 50px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  padding: 8px 20px;
+  border-radius: 8px;
+  color: white;
+  display: inline-block;
+  border: 3px solid;
+  min-width: 200px;
+  text-align: center;
+  position: absolute;
+  z-index: 1;
+  animation: boxScaleOut 0.8s forwards;
+}
+
+.itemBox {
+  width: 100%;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  text-align: center;
+  font-size: 35px;
+  opacity: 0;
+  animation: fadeIn 0.5s forwards;
+  color: white;
+}
+
+canvas { position: absolute; inset: 0; z-index: 1; }
+</style>
+
+<script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+const { useRef, useEffect, useState } = React;
+
+/* ---------------- LetterGlitch ---------------- */
+const LetterGlitch = ({
+  glitchColors = ['#2b4539', '#61dca3', '#61b3dc'],
+  glitchSpeed = 50,
+  characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$&*()-_+=/[]{};:<>.,0123456789'
+}) => {
+  const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const letters = useRef([]);
+  const grid = useRef({ columns: 0, rows: 0 });
+  const context = useRef(null);
+  const lastGlitchTime = useRef(Date.now());
+  const lettersAndSymbols = Array.from(characters);
+  const fontSize = 16;
+  const charWidth = 10;
+  const charHeight = 20;
+
+  const getRandomChar = () => lettersAndSymbols[Math.floor(Math.random() * lettersAndSymbols.length)];
+  const getRandomColor = () => glitchColors[Math.floor(Math.random() * glitchColors.length)];
+
+  const hexToRgb = (hex) => {
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, (m,r,g,b)=> r+r+g+g+b+b);
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {r:parseInt(result[1],16), g:parseInt(result[2],16), b:parseInt(result[3],16)} : null;
+  };
+
+  const interpolateColor = (start, end, factor) => {
+    const r = Math.round(start.r + (end.r - start.r) * factor);
+    const g = Math.round(start.g + (end.g - start.g) * factor);
+    const b = Math.round(start.b + (end.b - start.b) * factor);
+    return `rgb(${r},${g},${b})`;
+  };
+
+  const calculateGrid = (w,h)=>(({
+    columns: Math.ceil(w/charWidth),
+    rows: Math.ceil(h/charHeight)
+  }));
+
+  const initializeLetters = (columns,rows)=>{
+    grid.current={columns,rows};
+    const total = columns*rows;
+    letters.current = Array.from({length:total},() => ({
+      char:getRandomChar(),
+      color:getRandomColor(),
+      targetColor:getRandomColor(),
+      colorProgress:1
+    }));
+  };
+
+  const resizeCanvas = ()=>{
+    const canvas = canvasRef.current;
+    if(!canvas) return;
+    const parent = canvas.parentElement;
+    if(!parent) return;
+    const dpr = window.devicePixelRatio||1;
+    const rect = parent.getBoundingClientRect();
+    canvas.width = rect.width*dpr;
+    canvas.height = rect.height*dpr;
+    canvas.style.width = rect.width+'px';
+    canvas.style.height = rect.height+'px';
+    if(context.current) context.current.setTransform(dpr,0,0,dpr,0,0);
+    const {columns, rows} = calculateGrid(rect.width, rect.height);
+    initializeLetters(columns, rows);
+  };
+
+  const drawLetters = ()=>{
+    if(!context.current || letters.current.length===0) return;
+    const ctx=context.current;
+    const {width,height} = canvasRef.current.getBoundingClientRect();
+    ctx.clearRect(0,0,width,height);
+    ctx.font=`${fontSize}px monospace`;
+    ctx.textBaseline='top';
+    letters.current.forEach((l,i)=>{
+      const x = (i%grid.current.columns)*charWidth;
+      const y = Math.floor(i/grid.current.columns)*charHeight;
+      ctx.fillStyle=l.color;
+      ctx.fillText(l.char,x,y);
+    });
+  };
+
+  const updateLetters = ()=>{
+    const count = Math.max(1, Math.floor(letters.current.length*0.05));
+    for(let i=0;i<count;i++){
+      const index = Math.floor(Math.random()*letters.current.length);
+      const l = letters.current[index];
+      if(!l) continue;
+      l.char=getRandomChar();
+      l.targetColor=getRandomColor();
+      l.colorProgress=0;
+    }
+  };
+
+  const handleSmoothTransitions = ()=>{
+    let redraw=false;
+    letters.current.forEach(letter=>{
+      if(letter.colorProgress<1){
+        letter.colorProgress+=0.05;
+        if(letter.colorProgress>1) letter.colorProgress=1;
+        const startRgb=hexToRgb(letter.color);
+        const endRgb=hexToRgb(letter.targetColor);
+        if(startRgb && endRgb){
+          letter.color=interpolateColor(startRgb,endRgb,letter.colorProgress);
+          redraw=true;
+        }
+      }
+    });
+    if(redraw) drawLetters();
+  };
+
+  const animate = ()=>{
+    const now=Date.now();
+    if(now-lastGlitchTime.current>=glitchSpeed){
+      updateLetters();
+      drawLetters();
+      lastGlitchTime.current=now;
+    }
+    handleSmoothTransitions();
+    animationRef.current=requestAnimationFrame(animate);
+  };
+
+  useEffect(()=>{
+    const canvas = canvasRef.current;
+    if(!canvas) return;
+    context.current = canvas.getContext('2d');
+    resizeCanvas();
+    animate();
+    const handleResize = ()=>{ resizeCanvas(); };
+    window.addEventListener('resize', handleResize);
+    return ()=> {
+      window.removeEventListener('resize', handleResize);
+      if(animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  },[]);
+
+  return <canvas ref={canvasRef} style={{display:'block', width:'100%', height:'100%'}} />;
+};
+
+/* ---------------- Decrypted Text Hook ---------------- */
+function useDecryptedText(targetText, totalDuration = 1200, startDelay = 0, glitchColors = ['#2b4539', '#61dca3', '#61b3dc']) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()[]{};:<>.,/?+-_';
+  const [display, setDisplay] = useState([]);
+
+  useEffect(() => {
+    const textArr = Array.from(targetText || '');
+    if (textArr.length === 0) {
+      setDisplay([]);
+      return;
+    }
+
+    const startTime = Date.now() + (startDelay || 0);
+    const revealTimes = textArr.map(() => startTime + Math.random() * totalDuration);
+    let raf = null;
+
+    const getRandomColor = () => glitchColors[Math.floor(Math.random() * glitchColors.length)];
+    const getRandomChar = () => chars[Math.floor(Math.random() * chars.length)];
+
+    const update = () => {
+      const now = Date.now();
+      const letters = textArr.map((c, i) => {
+        if (now >= revealTimes[i]) {
+          return { char: c, color: 'white' };
+        } else {
+          return { char: getRandomChar(), color: getRandomColor() };
+        }
+      });
+      setDisplay(letters);
+
+      const allRevealed = letters.every((l, i) => l.char === textArr[i]);
+      if (!allRevealed) {
+        raf = requestAnimationFrame(update);
+      }
+    };
+
+    raf = requestAnimationFrame(update);
+    return () => {
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [targetText, totalDuration, startDelay]);
+
+  return display;
+}
+
+/* ---------------- DataBox ---------------- */
+const DataBox = () => {
+  const API_BASE = 'http://79.141.77.117:8000';
+  const [categories, setCategories] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const currentIndexRef = useRef(currentIndex);
+  const [prevIndex, setPrevIndex] = useState(null);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [items, setItems] = useState([]);
+  const [categoryColor, setCategoryColor] = useState('#fff');
+  const intervalRef = useRef(null);
+
+  const cacheRef = useRef({});
+  const controllersRef = useRef({});
+
+  useEffect(() => { currentIndexRef.current = currentIndex; }, [currentIndex]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(`/api/categories`);
+        if (!res.ok) throw new Error('Failed to fetch categories');
+        const data = await res.json();
+        setCategories(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchCategories();
+    const interval = setInterval(fetchCategories, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    cacheRef.current = {};
+  }, [categories]);
+
+  const loadCategory = async (idx) => {
+    const len = categories.length || 1;
+    if (idx < 0) idx = ((idx % len) + len) % len;
+    const cached = cacheRef.current[idx];
+    const etag = cached?.etag;
+
+    if (controllersRef.current[idx]) {
+      try { controllersRef.current[idx].abort(); } catch (e) {}
+    }
+    const ctrl = new AbortController();
+    controllersRef.current[idx] = ctrl;
+
+    try {
+      let url = `api/categories/${idx}`;
+      if (etag) url += `?check=true&etag=${etag}`;
+      const res = await fetch(url, { signal: ctrl.signal });
+      if (!res.ok) throw new Error('Fetch failed');
+      const data = await res.json();
+
+      if (data.notModified && cached) {
+        setItems(cached.items || []);
+        setCategoryColor(cached.color || '#fff');
+        return;
+      }
+
+      cacheRef.current[idx] = data;
+      if (currentIndexRef.current === idx) {
+        setItems(data.items || []);
+        setCategoryColor(data.color || '#fff');
+      }
+
+    } catch (err) {
+      if (err.name === 'AbortError') return;
+      console.error('Load category error', err);
+    } finally {
+      delete controllersRef.current[idx];
+    }
+  };
+
+  const prefetchIndex = (idx) => {
+    const len = categories.length || 1;
+    if (len === 0) return;
+    idx = idx % len;
+    if (controllersRef.current[idx]) {
+      try { controllersRef.current[idx].abort(); } catch(e) {}
+    }
+    const ctrl = new AbortController();
+    controllersRef.current[idx] = ctrl;
+    fetch(`api/categories/${idx}`, { signal: ctrl.signal })
+      .then(res => {
+        if (!res.ok) throw new Error('Prefetch failed');
+        return res.json();
+      })
+      .then(data => {
+        cacheRef.current[idx] = data;
+      })
+      .catch(err => {
+        if (err.name === 'AbortError') return;
+        console.warn('Prefetch error', err);
+      })
+      .finally(() => { delete controllersRef.current[idx]; });
+  };
+
+  useEffect(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    const len = categories.length || 1;
+    intervalRef.current = setInterval(() => {
+      setPrevIndex(currentIndexRef.current);
+      setCurrentIndex(prev => (prev + 1) % len);
+      setIsTransitioning(true);
+      setTimeout(() => setIsTransitioning(false), 1000);
+    }, 5000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [categories.length]);
+
+  useEffect(() => {
+    if (!categories.length) return;
+    loadCategory(currentIndex);
+    prefetchIndex((currentIndex + 1) % categories.length);
+  }, [currentIndex, categories]);
+
+  useEffect(() => {
+    if (categories.length > 0) {
+      setCurrentIndex(0);
+      loadCategory(0);
+      prefetchIndex(1 % categories.length);
+    }
+  }, [categories]);
+
+  const categoryName = categories[currentIndex]?.name || '';
+  const decryptedTitle = useDecryptedText(categoryName, 1400, 0, ['#2b4539', '#61dca3', '#61b3dc']);
+
+  const Item = ({ item, idx }) => {
+    const decryptedItem = useDecryptedText(item, 1500, idx * 80, ['#2b4539', '#61dca3', '#61b3dc']);
+    return (
+      <div className="itemBox" style={{ animationDelay: `${idx * 0.5}s` }}>
+        {decryptedItem.map((letter, j) => (
+          <span key={j} style={{ color: letter.color }}>{letter.char}</span>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <div id="dataBoxContainer" style={{ border: `3px solid ${categoryColor}` }}>
+      {prevIndex !== null && isTransitioning && categories[prevIndex] && (
+        <div className="prevCategoryTitle" style={{ borderColor: categories[prevIndex].color }}>
+          {categories[prevIndex].name}
+        </div>
+      )}
+
+      <div
+        className="categoryTitle"
+        style={{
+          borderColor: categoryColor,
+          animation: isTransitioning ? 'boxScaleIn 1s forwards' : 'none'
+        }}
+      >
+        {decryptedTitle.map((letter, i) => (
+          <span key={i} style={{ color: letter.color }}>{letter.char}</span>
+        ))}
+      </div>
+
+      <div className="itemsContainer">
+        {items.length > 0 && items.map((it, i) => <Item key={`${currentIndex}-${i}`} item={it} idx={i} />)}
+      </div>
+    </div>
+  );
+};
+
+/* ---------------- App ---------------- */
+const App = () => (
+  <div style={{position:'relative', width:'100vw', height:'100vh'}}>
+    <LetterGlitch />
+    <DataBox />
+  </div>
+);
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>

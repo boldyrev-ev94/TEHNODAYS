@@ -1,62 +1,80 @@
-
 import psycopg2
+from psycopg2 import sql
+from database_create import create_users_table, create_categories_table, create_user_categories_table
+from config_reader import config
 
-# Подключение к серверу PostgreSQL
-conn = psycopg2.connect(
-    dbname="your_database",  # Имя бд
-    user="your_username",  # Пользователь
-    password="your_password",  # Пароль, созданный для пользователя
-    host="localhost",  # оставить так, подключаемся локально на сервере
-    port="5432"  # дефолтный порт  PostgreSQL
-)
-
-cur = conn.cursor()
-
-# Создание таблицы пользователей
-create_users_table = """
-CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    id_technopredki VARCHAR(50),
-    name VARCHAR(255),
-    registrator_id VARCHAR(50),
-    registrator_name VARCHAR(255)
-);
-"""
-
-# Создание таблицы категорий
-# *Не совсем понял про тип данных*
-create_categories_table = """
-CREATE TABLE IF NOT EXISTS categories (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    value VARCHAR(100),
-    value_type VARCHAR(50) CHECK (value_type IN ('time', 'кол-во данных'))
-);
-"""
-
-# Создание таблицы связи категорий и пользователей
-create_user_categories_table = """
-CREATE TABLE IF NOT EXISTS user_categories (
-    user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    category_id INT REFERENCES categories(id) ON DELETE CASCADE,
-    PRIMARY KEY (user_id, category_id)
-);
-"""
+# cur = conn.cursor()
+# # Подключение к серверу PostgreSQL
+# conn = psycopg2.connect(
+#     dbname="your_database",  # Имя бд
+#     user="your_username",  # Пользователь
+#     password="your_password",  # Пароль, созданный для пользователя
+#     host="localhost",  # оставить так, подключаемся локально на сервере
+#     port="5432"  # дефолтный порт  PostgreSQL
+# )
 
 
-async def main():
-    # Выполнение SQL создание таблиц
-    cur.execute(create_users_table)
-    cur.execute(create_categories_table)
-    cur.execute(create_user_categories_table)
-    # Подтверждаем
-    conn.commit()
+def main():
+    # # Пример использования
+    # exists = check_database_exists(
+    #     'mydatabase', host='localhost', user='postgres', password=str(config.password.get_secret_value()))
+    # print(f"База данных существует: {exists}")
 
-    print("Таблицы успешно созданы")
+    exists = check_database_exists(
+        config.name_bd,
+        host=config.host,
+        user=config.user,
+        password=config.password.get_secret_value(),
+        port=4000)
 
-    cur.close()
-    conn.close()
+    print(f"База данных существует: {exists}")
+    # # Выполнение SQL создание таблиц
+    # cur.execute(create_users_table)
+    # cur.execute(create_categories_table)
+    # cur.execute(create_user_categories_table)
+    # # Подтверждаем
+    # conn.commit()
+
+    # print("Таблицы успешно созданы")
+
+    # cur.close()
+    # conn.close()
+
+
+def check_database_exists(dbname, **kwargs):
+    try:
+        # Подключаемся к базе данных postgres (системная БД)
+        conn = psycopg2.connect(dbname, **kwargs)
+        cursor = conn.cursor()
+
+        # Выполняем запрос к системному каталогу pg_database
+        query = sql.SQL("SELECT COUNT(*) FROM pg_database WHERE datname = %s")
+        cursor.execute(query, (dbname,))
+
+        # Получаем результат
+        result = cursor.fetchone()[0]
+        return result > 0
+
+    except psycopg2.Error as e:
+        print(f"Ошибка при проверке БД: {e}")
+        return False
+    finally:
+        if conn:
+            cursor.close()
+            conn.close()
+
+
+# def check_database_exists(dbname, **kwargs):
+#     try:
+#         # Пытаемся подключиться к указанной БД
+#         with psycopg2.connect(dbname=dbname, **kwargs) as ps:
+#             return True
+#     except psycopg2.DatabaseError as e:
+#         # Если БД не существует, будет выброшено исключение
+#         if "does not exist" in str(e):
+#             return False
+#         raise
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

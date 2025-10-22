@@ -15,37 +15,98 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# === Данные ===
 CATEGORIES = [
-    {"name": "Фрукты", "items": ["Яблоко", "Банан",
-                                 "Апельсин", "Киви"], "color": "#e74c3c"},
-    {"name": "Животные", "items": [
-        "Кошка", "Собака", "Лиса", "Слон"], "color": "#3498db"},
-    {"name": "Страны", "items": ["Россия", "Япония",
-                                 "Франция", "Бразилия"], "color": "#2ecc71"},
-    {"name": "Языки программирования", "items": [
-        "Python", "JavaScript", "C++", "Rust"], "color": "#f1c40f"},
+    {"id": 0, "name": "SMS-T",
+        "items": ["Игрок1", "Игрок2", "Игрок3"], "color": "#e74c3c"},
+    {"id": 1, "name": "Карандаш кассета", "items": [
+        "Игрок1", "Игрок2"], "color": "#3498db"},
+    {"id": 2, "name": "Домашний телефон", "items": [
+        "Игрок1", "Игрок2"], "color": "#2ecc71"},
+    {"id": 3, "name": "Словарь без инета", "items": [
+        "Игрок1", "Игрок2"], "color": "#f1c40f"},
+    {"id": 4, "name": "Старый комп VS Новый", "items": [
+        "Игрок1", "Игрок2"], "color": "#9b59b6"},
+    {"id": 5, "name": "Железный конструктор", "items": [
+        "Игрок1", "Игрок2"], "color": "#e67e22"},
+    {"id": 6, "name": "Перо VS ручка VS Граф.планшет",
+        "items": ["Игрок1", "Игрок2"], "color": "#1abc9c"},
+    {"id": 7, "name": "Перемотать ДВД", "items": [
+        "Игрок1", "Игрок2"], "color": "#34495e"},
+    {"id": 8, "name": "За рулём", "items": [
+        "Игрок1", "Игрок2"], "color": "#f39c12"},
+    {"id": 9, "name": "НТО", "items": [
+        "Игрок1", "Игрок2"], "color": "#7f8c8d"},
 ]
 
+LEADERS = [
+    {"rank": 1, "name": "SMS-T", "category": "рекорд", "score": 123},
+    {"rank": 2, "name": "Карандаш кассета",
+        "category": "время (наименьшее)", "score": 45},
+    {"rank": 3, "name": "Домашний телефон",
+        "category": "время (наименьшее)", "score": 30},
+    {"rank": 4, "name": "Словарь без инета",
+        "category": "время (наименьшее)", "score": 25},
+    {"rank": 5, "name": "Старый комп VS Новый",
+        "category": "рекорд", "score": 110},
+    {"rank": 6, "name": "Железный конструктор",
+        "category": "время (наименьшее)", "score": 50},
+    {"rank": 7, "name": "Перо VS ручка VS Граф.планшет",
+        "category": "время (наименьшее)", "score": 35},
+    {"rank": 8, "name": "Перемотать ДВД",
+        "category": "время (наименьшее)", "score": 20},
+    {"rank": 9, "name": "За рулём",
+        "category": "время (наибольшее)", "score": 99},
+    {"rank": 10, "name": "НТО", "category": "время (наименьшее)", "score": 15},
+]
 
-def get_hash(cat):
-    data = json.dumps(cat, sort_keys=True, ensure_ascii=False)
-    return hashlib.md5(data.encode('utf-8')).hexdigest()
+ESPORTS = {
+    "categories": [
+        {"id": 0, "name": "Гонки", "color": "#e74c3c"},
+        {"id": 1, "name": "Пакман", "color": "#3498db"},
+        {"id": 2, "name": "Fruit ninja", "color": "#2ecc71"},
+        {"id": 3, "name": "Тетрис", "color": "#f1c40f"},
+    ],
+    "results": {
+        0: [{"player": "Игрок1", "score": 12}, {"player": "Игрок2", "score": 15}],
+        1: [{"player": "Игрок1", "score": 200}, {"player": "Игрок2", "score": 180}],
+        2: [{"player": "Игрок1", "score": 350}, {"player": "Игрок2", "score": 330}],
+        3: [{"player": "Игрок1", "score": 500}, {"player": "Игрок2", "score": 480}],
+    }
+}
+
+# === API ===
 
 
-@app.get("/categories")
+@app.get("/api/categories")
 def get_categories():
-    return [{"name": c["name"], "color": c.get("color", "#fff")} for c in CATEGORIES]
+    return [{"id": c["id"], "name": c["name"], "color": c.get("color", "#fff")} for c in CATEGORIES]
 
 
-@app.get("/categories/{idx}")
-def get_category(idx: int, check: bool = False, etag: str = None):
-    if idx < 0 or idx >= len(CATEGORIES):
+@app.get("/api/categories/{cat_id}/top10")
+def get_category_top10(cat_id: int):
+    if cat_id < 0 or cat_id >= len(CATEGORIES):
         raise HTTPException(status_code=404)
-    cat = CATEGORIES[idx]
-    h = get_hash(cat)
-    if check and etag == h:
-        return {"notModified": True, "etag": h}
-    return {**cat, "etag": h}
+    cat = CATEGORIES[cat_id]
+    return [{"name": name, "score": idx+1} for idx, name in enumerate(cat["items"])]
+
+
+@app.get("/api/leaders")
+def get_leaders():
+    return LEADERS
+
+
+@app.get("/api/esports")
+def get_esports():
+    return ESPORTS
+
+
+@app.get("/api/esports/{cat_id}/top10")
+def get_esports_top10(cat_id: int):
+    if cat_id not in ESPORTS["results"]:
+        raise HTTPException(status_code=404)
+    return ESPORTS["results"][cat_id]
 
 
 if __name__ == "__main__":
