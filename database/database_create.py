@@ -50,9 +50,35 @@ CREATE TABLE IF NOT EXISTS {name_tabel} (
     return res
 
 
-def drop_tables():
+def input_data_category():
+    data_list = [
+        ("SMS-T", "value", "main_zone"),
+        ("Карандаш кассета", "time_down", "main_zone"),
+        ("Домашний телефон", "time_down", "main_zone"),
+        ("Словарь без инета", "time_down", "main_zone"),
+        ("Старый комп VS Новый", "value", "main_zone"),
+        ("Железный конструктор", "time_down", "main_zone"),
+        ("Перо VS ручка VS Граф.планшет", "time_down", "main_zone"),
+        ("Перемотать ДВД", "time_down", "main_zone"),
+        ("За рулём", "time_up", "main_zone"),
+        ("НТО", "time_down", "main_zone"),
+        ("НТО", "time_down", "cyber_zone"),
+        ("НТО", "value", "cyber_zone"),
+        ("НТО", "value", "cyber_zone"),
+        ("НТО", "value", "cyber_zone")
+    ]
+    try:
+        with connection.cursor() as cursor:
+            # Используем executemany для массовой вставки
+            cursor.executemany(
+                "INSERT INTO categories (name, property, type) VALUES (%s, %s, %s)",
+                data_list
+            )
+            connection.commit()
 
-    return
+    except Exception as e:
+        connection.rollback()
+        print(f"Ошибка при массовой вставке: {e}")
 
 
 def main():
@@ -68,6 +94,8 @@ def main():
 
             cursor.execute(create_categories_table("categories"))
             print(f"✅ Таблица {"categories"} успешно создана")
+            input_data_category()
+            print(f"✅ Данные добавлены")
 
             data = get_table("categories", cursor)
             json_table = json.dumps(data, ensure_ascii=False, indent=2)
