@@ -37,18 +37,18 @@ CREATE TABLE IF NOT EXISTS user_categories (
 
 
 def main():
-    try:
-        db = Database()
-        with db.get_cursor() as cursor:
-
+    db = Database()
+    with db.get_cursor() as cursor:
+        try:
             cursor.execute(create_users_table)
             # cursor.execute(create_categories_table)
             # cursor.execute(create_user_categories_table)
             conn.commit()
             print("✅ Таблицы успешно созданы")
+        except Exception as e:
+            print(f"Ощибка: {e}")
+
         db.close()
-    except Exception as e:
-        print(f"Ощибка: {e}")
 
 
 if __name__ == "__main__":
