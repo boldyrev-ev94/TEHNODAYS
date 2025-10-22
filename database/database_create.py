@@ -1,9 +1,11 @@
 import psycopg2
 from psycopg2 import sql
 from db import Database
-
+import json
 
 # Создание таблицы пользователей
+
+
 def create_users_table(name_tabel):
     res = f"""
 CREATE TABLE IF NOT EXISTS {name_tabel} (
