@@ -15,6 +15,8 @@ class Database:
             )
         except OperationalError as e:
             print(f"Ошибка подключения к базе данных: {e}")
+        except Exception as e:
+            print(f"Error Database connect: {e}")
 
     @contextmanager
     def get_cursor(self):
