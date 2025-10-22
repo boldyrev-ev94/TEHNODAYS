@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS {name_tabel} (
     id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL,
     property VARCHAR(50) CHECK (property IN ('time_up', 'time_down', 'value')) NOT NULL,
-    type VARCHAR(50) CHECK (property IN ('main_zone', 'cyber_zone', 'other_zone')) NOT NULL
+    type VARCHAR(50) CHECK (type IN ('main_zone', 'cyber_zone', 'other_zone')) NOT NULL
 );
 """
     return res
