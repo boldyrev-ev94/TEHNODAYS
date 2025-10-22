@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS {name_tabel} (
     return res
 
 
-def input_data_category():
+def input_data_category(cursor):
     data_list = [
         ("SMS-T", "value", "main_zone"),
         ("Карандаш кассета", "time_down", "main_zone"),
@@ -68,14 +68,10 @@ def input_data_category():
         ("НТО", "value", "cyber_zone")
     ]
     try:
-        with connection.cursor() as cursor:
-            # Используем executemany для массовой вставки
-            cursor.executemany(
-                "INSERT INTO categories (name, property, type) VALUES (%s, %s, %s)",
-                data_list
-            )
-            connection.commit()
-
+        cursor.executemany(
+            "INSERT INTO categories (name, property, type) VALUES (%s, %s, %s)",
+            data_list
+        )
     except Exception as e:
         connection.rollback()
         print(f"Ошибка при массовой вставке: {e}")
@@ -94,7 +90,7 @@ def main():
 
             cursor.execute(create_categories_table("categories"))
             print(f"✅ Таблица {"categories"} успешно создана")
-            input_data_category()
+            input_data_category(cursor)
             print(f"✅ Данные добавлены")
 
             data = get_table("categories", cursor)
