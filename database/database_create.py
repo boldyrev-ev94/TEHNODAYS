@@ -43,7 +43,6 @@ def main():
             cursor.execute(create_users_table)
             # cursor.execute(create_categories_table)
             # cursor.execute(create_user_categories_table)
-            cursor.commit()
             print("✅ Таблицы успешно созданы")
         except Exception as e:
             print(f"Ощибка: {e}")
