@@ -1,13 +1,13 @@
-# FROM node:alpine as build
+FROM node:alpine as build
 
-# COPY package.json package.json
-# RUN npm install
-# COPY . .
-# RUN npm run build
+COPY package.json package.json
+RUN npm install
+COPY . .
+RUN npm run build
 
 FROM nginx:stable-alpine
 
-# COPY --from=build /dist /user/share/nginx/html
+COPY --from=build /dist /user/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 3000
 
