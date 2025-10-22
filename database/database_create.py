@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS {name_tabel} (
     return res
 
 
-def input_data_category(cursor):
+def input_data_category():
     data_list = [
         ("SMS-T", "value", "main_zone"),
         ("Карандаш кассета", "time_down", "main_zone"),
