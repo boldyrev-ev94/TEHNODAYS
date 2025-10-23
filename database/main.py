@@ -26,7 +26,9 @@ def get_categorys_dict():
         # INNER JOIN categories ON categories.id = user_category.category_id
         # INNER JOIN users ON users.id = user_category.user_id
         # """
-        sql_query_list_category
+        sql_query_list_category = f""" 
+
+"""
         sql_query = f"""
 SELECT categories.id categories.name users.name users.surname  FROM user_category
 INNER JOIN categories ON categories.id = user_category.category_id
