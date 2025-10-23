@@ -35,7 +35,7 @@ INNER JOIN users ON users.id = user_category.user_id
             "columns": column_names,
             "data": data
         }
-        print(users)
+        print(resaut)
     return resaut
 
 
