@@ -5,6 +5,23 @@ from model import User
 import json
 from db import Database
 
+CATEGORIES = [
+    ("SMS-T", "value", "main_zone"),
+    ("Карандаш кассета", "time_down", "main_zone"),
+    ("Домашний телефон", "time_down", "main_zone"),
+    ("Словарь без инета", "time_down", "main_zone"),
+    ("Старый комп VS Новый", "value", "main_zone"),
+    ("Железный конструктор", "time_down", "main_zone"),
+    ("Перо VS ручка VS Граф.планшет", "time_down", "main_zone"),
+    ("Перемотать ДВД", "time_down", "main_zone"),
+    ("За рулём", "time_up", "main_zone"),
+    ("НТО", "time_down", "main_zone"),
+    ("Гонки", "time_down", "cyber_zone"),
+    ("Пакман", "value", "cyber_zone"),
+    ("Fruit ninja", "value", "cyber_zone"),
+    ("Тетрис", "value", "cyber_zone")
+]
+
 
 def main():
     # db = Database()
@@ -26,23 +43,47 @@ def get_categorys_dict():
         # INNER JOIN categories ON categories.id = user_category.category_id
         # INNER JOIN users ON users.id = user_category.user_id
         # """
-
-        sql_query = f"""
-SELECT users.name, categories.type, categories.property, user_category.value  FROM user_category
+        for id, key in enumerate(CATEGORIES):
+            sql_query = f"""
+SELECT users.name, users.surname, categories.type, categories.property, user_category.value  FROM user_category
 INNER JOIN categories ON categories.id = user_category.category_id
 INNER JOIN users ON users.id = user_category.user_id
-WHERE categories.id = 1
+WHERE categories.id = {id}
 """
         cursor.execute(sql_query)
         column_names = [desc[0] for desc in cursor.description]
         rows = cursor.fetchall()
         data = [dict(zip(column_names, row)) for row in rows]
+        value = ""
+        toplist = []
+        for user in data:
+            if user['property'] == "value":
+                value = int(user['value'])
+            else:
+                minute, sec = map(int, user['value'].split(':'))
+                value = minute * 60 + sec
+
+            toplist.append({
+                "name": f"{user['surname']} {user['name']}",
+                'value': value
+            })
+        res_list_users = []
+        if user['property'] == "value":
+            res_list_users = sorted(
+                toplist, key=lambda x: x['value'], reverse=True)[:15]
+        elif user['property'] == "time_up":
+            res_list_users = sorted(
+                toplist, key=lambda x: x['value'], reverse=True)[:15]
+        else:
+            res_list_users = sorted(
+                toplist, key=lambda x: x['value'], reverse=True)[-15:]
+
         resaut = {
-            "name_tabel": "JOIN INNER JOIN INNER",
-            "columns": column_names,
-            "data": data
+            "id": id,
+            "name": key[1],
+            "items": res_list_users
         }
-        json_table = json.dumps(data, ensure_ascii=False, indent=2)
+        json_table = json.dumps(resaut, ensure_ascii=False, indent=2)
         print(json_table)
     return json_table
 
