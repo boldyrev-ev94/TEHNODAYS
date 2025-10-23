@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import hashlib
 import uvicorn
 import json
-from TEHNODAYS.database import get_categories_tables
+from TEHNODAYS.database import get_categories_tables_
 app = FastAPI()
 
 app.add_middleware(
@@ -85,14 +85,14 @@ ESPORTS = {
 
 @app.get("/api/categories")
 def get_categories():
-    categories = get_categories_tables()
+    categories = get_categories_tables_()
     print(categories)
     return [{"id": c["id"], "name": c["name"], "color": c.get("color", "#fff")} for c in categories]
 
 
 @app.get("/api/categories/{cat_id}/top10")
 def get_category_top10(cat_id: int):
-    categories = get_categories_tables()
+    categories = get_categories_tables_()
     if cat_id < 0 or cat_id >= len(categories):
         raise HTTPException(status_code=404)
     cat = categories[cat_id]
