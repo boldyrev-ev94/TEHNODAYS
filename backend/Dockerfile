@@ -5,4 +5,4 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "-m", "TEHNODAYS.backend.main.py"]
+CMD ["python", "TEHNODAYS.backend.main.py"]
