@@ -86,6 +86,7 @@ ESPORTS = {
 @app.get("/api/categories")
 def get_categories():
     categories = get_categories_tables()
+    print(categories)
     return [{"id": c["id"], "name": c["name"], "color": c.get("color", "#fff")} for c in categories]
 
 
