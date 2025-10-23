@@ -31,7 +31,9 @@ def main():
     #     rows = cursor.fetchall()
     #     users = [json.dumps(User(*row).__dict__) for row in rows]
     #     print(users)
-    res = get_categorys_dict()
+    res = get_categories_tables()
+    json_table = json.dumps(res, ensure_ascii=False, indent=2)
+    print(json_table)
 
 
 def get_categorys_dict():
@@ -94,9 +96,26 @@ WHERE categories.id = {id}
             }
 
             list_categories.append(resaut)
-        json_table = json.dumps(list_categories, ensure_ascii=False, indent=2)
-        print(json_table)
+        # json_table = json.dumps(list_categories, ensure_ascii=False, indent=2)
+        # print(json_table)
     return list_categories
+
+
+def get_categories_tables():
+    colors = [
+        "#e74c3c", "#3498db", "#2ecc71", "#f1c40f", "#9b59b6", "#e67e22", "#1abc9c", "#34495e", "#f39c12", "#7f8c8d", "#1abc9c", "#1abc9c", "#1abc9c", "#1abc9c", "#1abc9c"
+    ]
+    data = get_categorys_dict()
+    resaut = []
+    for item in data:
+        res = {
+            "id": item["id"],
+            "name": item["name"],
+            "items": [i["name"] for i in item["items"]],
+            "color": colors[random.randint(0, len(colors)-1)]
+        }
+        resaut.append()
+    return resaut
 
 
 def get_table(table_name, cursor):
