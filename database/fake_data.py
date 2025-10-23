@@ -3,7 +3,7 @@ import psycopg2
 from psycopg2 import sql
 from db import Database
 import json
-import datetime
+from datetime import datetime
 
 
 def add_user(id):
@@ -13,7 +13,7 @@ def add_user(id):
     mng_id = str(random.randint(1, 5))
     registrator_id = mng_id
     registrator_name = f"РЕГИСТРАТОР {mng_id}"
-    date_registr = 'NOW()'
+    date_registr = f'{datetime.now()}'
     sql = f"""
     INSERT INTO users (id_technopredki, name, surname, registrator_id, registrator_name, date_registr) 
     VALUES (%s, %s, %s, %s, %s, {date_registr}) 
@@ -57,20 +57,12 @@ def main():
                 db.connection.commit()
 
             data = get_table("users", cursor)
-            json_table = json.dumps(
-                data, ensure_ascii=False, indent=2, cls=DateTimeEncoder)
+            json_table = json.dumps(data, ensure_ascii=False, indent=2)
             print(json_table)
     except Exception as e:
         print(f"Ошибка при добавлении пользователей: {e}")
     finally:
         db.close()
-
-
-class DateTimeEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, datetime):
-            return obj.isoformat()
-        return super().default(obj)
 
 
 if __name__ == "__main__":

@@ -15,8 +15,7 @@ CREATE TABLE IF NOT EXISTS {name_tabel} (
     surname VARCHAR(50) NOT NULL,
     registrator_id VARCHAR(50),
     registrator_name VARCHAR(255),
-    date_registr TIMESTAMP,
-    CONSTRAINT chk_date_registr CHECK (date_registr >= '2000-01-01')
+    date_registr VARCHAR(255)
 );
 """
     return res
