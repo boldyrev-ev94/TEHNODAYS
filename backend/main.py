@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import hashlib
 import uvicorn
 import json
-from TEHNODAYS.database import get_categories_tables_
+from TEHNODAYS.database.main import get_categories_tables
 app = FastAPI()
 
 app.add_middleware(
