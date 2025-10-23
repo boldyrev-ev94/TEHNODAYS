@@ -33,7 +33,7 @@ INNER JOIN categories ON categories.id = user_category.category_id
 INNER JOIN users ON users.id = user_category.user_id
 WHERE categories.id = 1
 """
-        cursor.execute(sql_query_list_category)
+        cursor.execute(sql_query)
         column_names = [desc[0] for desc in cursor.description]
         rows = cursor.fetchall()
         data = [dict(zip(column_names, row)) for row in rows]
