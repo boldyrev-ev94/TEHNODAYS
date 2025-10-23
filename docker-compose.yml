@@ -36,3 +36,6 @@ services:
 networks:
   tehnodays-net:
     driver: bridge
+
+volumes:  # Добавьте это определение
+  postgres_data:
