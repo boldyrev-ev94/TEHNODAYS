@@ -115,7 +115,7 @@ def get_categories_tables():
             "items": [i["name"] for i in item["items"]],
             "color": colors[random.randint(0, len(colors)-1)]
         }
-        resaut.append()
+        resaut.append(res)
     return resaut
 
 
