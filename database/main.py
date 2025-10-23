@@ -67,14 +67,13 @@ WHERE categories.id = {id}
                         # print(user['value'])
                         minute, sec = map(int, user['value'].split(':'))
                         value = minute * 60 + sec
+                    toplist.append({
+                        "name": f"{user['surname']} {user['name']}",
+                        'value': value,
+                        "property": user['property']
+                    })
                 except:
                     pass
-
-                toplist.append({
-                    "name": f"{user['surname']} {user['name']}",
-                    'value': value,
-                    "property": user['property']
-                })
 
             res_list_users = []
             for user in toplist:
