@@ -59,7 +59,8 @@ WHERE categories.id = {id}
             value = ""
             toplist = []
             for user in data:
-                print(user['propery'])
+                u = dict(user)
+                print(u['propery'])
             #     if user['property'] == "value":
             #         value = int(user['value'])
             #     else:
