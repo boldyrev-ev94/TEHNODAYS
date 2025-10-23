@@ -1,7 +1,6 @@
 import psycopg2
 from psycopg2 import sql
 from db import Database
-from model import User
 import json
 from db import Database
 import random
