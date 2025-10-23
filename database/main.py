@@ -21,10 +21,16 @@ def get_categorys_dict():
     db = Database()
     with db.get_cursor() as cursor:
         # data = get_table("user_category")
+        #         sql_query = """
+        # SELECT * FROM user_category
+        # INNER JOIN categories ON categories.id = user_category.category_id
+        # INNER JOIN users ON users.id = user_category.user_id
+        # """
         sql_query = """
 SELECT * FROM user_category
 INNER JOIN categories ON categories.id = user_category.category_id
 INNER JOIN users ON users.id = user_category.user_id
+GROUP BY categories.category_id
 """
         cursor.execute(sql_query)
         column_names = [desc[0] for desc in cursor.description]
