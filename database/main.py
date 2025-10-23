@@ -55,7 +55,7 @@ WHERE categories.id = {id}
             column_names = [desc[0] for desc in cursor.description]
             rows = cursor.fetchall()
             data = [dict(zip(column_names, row)) for row in rows]
-            print(data)
+            print(json.dumps(data, ensure_ascii=False, indent=2))
             value = ""
             toplist = []
             # for user in data:
@@ -84,7 +84,7 @@ WHERE categories.id = {id}
             resaut = {
                 "id": id,
                 "name": key[1],
-                "items": res_list_users
+                "items": "res_list_users"
             }
             json_table = json.dumps(resaut, ensure_ascii=False, indent=2)
             list_categories.append(json_table)
