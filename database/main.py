@@ -69,21 +69,23 @@ WHERE categories.id = {id}
                     "name": f"{user['surname']} {user['name']}",
                     'value': value
                 })
+
             res_list_users = []
-            if user['property'] == "value":
-                res_list_users = sorted(
-                    toplist, key=lambda x: x['value'], reverse=True)[:15]
-            elif user['property'] == "time_up":
-                res_list_users = sorted(
-                    toplist, key=lambda x: x['value'], reverse=True)[:15]
-            else:
-                res_list_users = sorted(
-                    toplist, key=lambda x: x['value'], reverse=True)[-15:]
+            for user in toplist:
+                if user['property'] == "value":
+                    res_list_users = sorted(
+                        toplist, key=lambda x: x['value'], reverse=True)[:15]
+                elif user['property'] == "time_up":
+                    res_list_users = sorted(
+                        toplist, key=lambda x: x['value'], reverse=True)[:15]
+                else:
+                    res_list_users = sorted(
+                        toplist, key=lambda x: x['value'], reverse=True)[-15:]
 
             resaut = {
                 "id": id,
                 "name": key[1],
-                "items": "res_list_users"
+                "items": res_list_users
             }
             json_table = json.dumps(resaut, ensure_ascii=False, indent=2)
             list_categories.append(json_table)
