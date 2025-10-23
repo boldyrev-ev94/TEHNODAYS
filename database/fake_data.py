@@ -16,9 +16,9 @@ def add_user(id):
     date_registr = 'NOW()'
     sql = f"""
     INSERT INTO users (id_technopredki, name, surname, registrator_id, registrator_name, date_registr) 
-    VALUES (%s, %s, %s, %s, %s, %s) 
+    VALUES (%s, %s, %s, %s, %s, {date_registr}) 
     """
-    return [sql, (id_technopredki, name, surname, registrator_id, registrator_name, date_registr)]
+    return [sql, (id_technopredki, name, surname, registrator_id, registrator_name)]
 
 
 def category_for_user():
