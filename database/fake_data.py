@@ -87,7 +87,7 @@ def main():
                             sql, (user_id, l[rand], str(random.randint(80, 1000))))
                     else:
                         cursor.execute(sql, (user_id, l[rand], str(
-                            f"{random.randint(0, 23):02}:{random.randint(0, 59):02}")))
+                            f"{random.randint(0, 59):02}:{random.randint(0, 59):02}")))
                     db.connection.commit()
                     l.pop(rand)
 
