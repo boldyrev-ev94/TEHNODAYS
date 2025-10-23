@@ -47,12 +47,12 @@ def main():
         with db.get_cursor() as cursor:
             for i in range(20):
                 cursor.execute(add_users(i))
+                db.commit()
             data = get_table("users", cursor)
             json_table = json.dumps(data, ensure_ascii=False, indent=2)
             print(json_table)
-
     except Exception as e:
-        print(f"Ощибка при добавлении пользователей: {e}")
+        print(f"Ошибка при добавлении пользователей: {e}")
     finally:
         db.close()
 
