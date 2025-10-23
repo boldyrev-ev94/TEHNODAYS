@@ -43,6 +43,7 @@ def get_categorys_dict():
         # INNER JOIN categories ON categories.id = user_category.category_id
         # INNER JOIN users ON users.id = user_category.user_id
         # """
+        list_categories = []
         for id, key in enumerate(CATEGORIES):
             sql_query = f"""
 SELECT users.name, users.surname, categories.type, categories.property, user_category.value  FROM user_category
@@ -50,42 +51,44 @@ INNER JOIN categories ON categories.id = user_category.category_id
 INNER JOIN users ON users.id = user_category.user_id
 WHERE categories.id = {id}
 """
-        cursor.execute(sql_query)
-        column_names = [desc[0] for desc in cursor.description]
-        rows = cursor.fetchall()
-        data = [dict(zip(column_names, row)) for row in rows]
-        print(data)
-        value = ""
-        toplist = []
-        for user in data:
-            print(user)
+            cursor.execute(sql_query)
+            column_names = [desc[0] for desc in cursor.description]
+            rows = cursor.fetchall()
+            data = [dict(zip(column_names, row)) for row in rows]
+            print(data)
+            value = ""
+            toplist = []
+            for user in data:
+                print(user)
+                if user['property'] == "value":
+                    value = int(user['value'])
+                else:
+                    minute, sec = map(int, user['value'].split(':'))
+                    value = minute * 60 + sec
+
+                toplist.append({
+                    "name": f"{user['surname']} {user['name']}",
+                    'value': value
+                })
+            res_list_users = []
             if user['property'] == "value":
-                value = int(user['value'])
+                res_list_users = sorted(
+                    toplist, key=lambda x: x['value'], reverse=True)[:15]
+            elif user['property'] == "time_up":
+                res_list_users = sorted(
+                    toplist, key=lambda x: x['value'], reverse=True)[:15]
             else:
-                minute, sec = map(int, user['value'].split(':'))
-                value = minute * 60 + sec
+                res_list_users = sorted(
+                    toplist, key=lambda x: x['value'], reverse=True)[-15:]
 
-            toplist.append({
-                "name": f"{user['surname']} {user['name']}",
-                'value': value
-            })
-        res_list_users = []
-        if user['property'] == "value":
-            res_list_users = sorted(
-                toplist, key=lambda x: x['value'], reverse=True)[:15]
-        elif user['property'] == "time_up":
-            res_list_users = sorted(
-                toplist, key=lambda x: x['value'], reverse=True)[:15]
-        else:
-            res_list_users = sorted(
-                toplist, key=lambda x: x['value'], reverse=True)[-15:]
+            resaut = {
+                "id": id,
+                "name": key[1],
+                "items": res_list_users
+            }
+            json_table = json.dumps(resaut, ensure_ascii=False, indent=2)
+            list_categories.append(json_table)
 
-        resaut = {
-            "id": id,
-            "name": key[1],
-            "items": res_list_users
-        }
-        json_table = json.dumps(resaut, ensure_ascii=False, indent=2)
         print(json_table)
     return json_table
 
