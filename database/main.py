@@ -60,31 +60,31 @@ WHERE categories.id = {id}
             toplist = []
             for user in data_json:
                 print(user)
-                if user['property'] == "value":
-                    value = int(user['value'])
-                else:
-                    minute, sec = map(int, user['value'].split(':'))
-                    value = minute * 60 + sec
+            #     if user['property'] == "value":
+            #         value = int(user['value'])
+            #     else:
+            #         minute, sec = map(int, user['value'].split(':'))
+            #         value = minute * 60 + sec
 
-                toplist.append({
-                    "name": f"{user['surname']} {user['name']}",
-                    'value': value
-                })
-            res_list_users = []
-            if user['property'] == "value":
-                res_list_users = sorted(
-                    toplist, key=lambda x: x['value'], reverse=True)[:15]
-            elif user['property'] == "time_up":
-                res_list_users = sorted(
-                    toplist, key=lambda x: x['value'], reverse=True)[:15]
-            else:
-                res_list_users = sorted(
-                    toplist, key=lambda x: x['value'], reverse=True)[-15:]
+            #     toplist.append({
+            #         "name": f"{user['surname']} {user['name']}",
+            #         'value': value
+            #     })
+            # res_list_users = []
+            # if user['property'] == "value":
+            #     res_list_users = sorted(
+            #         toplist, key=lambda x: x['value'], reverse=True)[:15]
+            # elif user['property'] == "time_up":
+            #     res_list_users = sorted(
+            #         toplist, key=lambda x: x['value'], reverse=True)[:15]
+            # else:
+            #     res_list_users = sorted(
+            #         toplist, key=lambda x: x['value'], reverse=True)[-15:]
 
             resaut = {
                 "id": id,
                 "name": key[1],
-                "items": res_list_users
+                "items": "res_list_users"
             }
             json_table = json.dumps(resaut, ensure_ascii=False, indent=2)
             list_categories.append(json_table)
