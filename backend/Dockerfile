@@ -11,7 +11,7 @@ RUN apt-get update && \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN ls -la /app
-RUN ls -la /app/backend
+# RUN ls -la /app
+# RUN ls -la /app/backend
 
 CMD ["python", "backend/main.py"]
