@@ -26,35 +26,12 @@ def get_categorys_dict():
         # INNER JOIN categories ON categories.id = user_category.category_id
         # INNER JOIN users ON users.id = user_category.user_id
         # """
-        sql_query_list_category = f""" 
-SELECT 
-    u.id AS user_id,
-    u.id_technopredki,
-    u.name AS user_name,
-    u.surname AS user_surname,
-    u.registrator_id,
-    u.registrator_name,
-    u.date_registr,
-    JSONB_BUILD_ARRAY(
-        JSONB_BUILD_OBJECT(
-            'category_id', c.id,
-            'category_name', c.name,
-            'property', c.property,
-            'type', c.type,
-            'value', uc.value
-        )
-    ) AS categories
-FROM users u
-LEFT JOIN user_category uc ON u.id = uc.user_id
-LEFT JOIN categories c ON uc.category_id = c.id
-GROUP BY u.id, c.id
-ORDER BY u.id;
-"""
+
         sql_query = f"""
-SELECT * FROM user_category
+SELECT users.name FROM user_category
 INNER JOIN categories ON categories.id = user_category.category_id
 INNER JOIN users ON users.id = user_category.user_id
-WHERE categories.name = 'SMS-T'
+WHERE categories.id = 1
 """
         cursor.execute(sql_query_list_category)
         column_names = [desc[0] for desc in cursor.description]
