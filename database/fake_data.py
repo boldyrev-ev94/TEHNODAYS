@@ -47,7 +47,7 @@ def main():
         with db.get_cursor() as cursor:
             for i in range(20):
                 cursor.execute(add_users(i))
-                db.commit()
+                db.connection.commit()
             data = get_table("users", cursor)
             json_table = json.dumps(data, ensure_ascii=False, indent=2)
             print(json_table)
