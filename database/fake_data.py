@@ -5,6 +5,23 @@ from db import Database
 import json
 from datetime import datetime
 
+CATEGORYLIST = [
+    ("SMS-T", "value", "main_zone"),
+    ("Карандаш кассета", "time_down", "main_zone"),
+    ("Домашний телефон", "time_down", "main_zone"),
+    ("Словарь без инета", "time_down", "main_zone"),
+    ("Старый комп VS Новый", "value", "main_zone"),
+    ("Железный конструктор", "time_down", "main_zone"),
+    ("Перо VS ручка VS Граф.планшет", "time_down", "main_zone"),
+    ("Перемотать ДВД", "time_down", "main_zone"),
+    ("За рулём", "time_up", "main_zone"),
+    ("НТО", "time_down", "main_zone"),
+    ("Гонки", "time_down", "cyber_zone"),
+    ("Пакман", "value", "cyber_zone"),
+    ("Fruit ninja", "value", "cyber_zone"),
+    ("Тетрис", "value", "cyber_zone")
+]
+
 
 def add_user(id):
     id_technopredki = id
@@ -14,7 +31,7 @@ def add_user(id):
     registrator_id = mng_id
     registrator_name = f"РЕГИСТРАТОР {mng_id}"
     date_registr = f'{datetime.now()}'
-    sql = f"""
+    sql = """
     INSERT INTO users (id_technopredki, name, surname, registrator_id, registrator_name, date_registr) 
     VALUES (%s, %s, %s, %s, %s, %s) 
     """
@@ -59,6 +76,28 @@ def main():
             data = get_table("users", cursor)
             json_table = json.dumps(data, ensure_ascii=False, indent=2)
             print(json_table)
+
+            for user_id in range(1, 20):
+                for count_category in range(1, random.randint(15)):
+                    sql = """
+                    INSERT INTO user_category (user_id, category_id, value) 
+    VALUES (%s, %s, %s) 
+                    """
+                    l = [i for i in range(1, 15)]
+                    rand = random.randint(len(l))
+                    if CATEGORYLIST[rand][1] == "value":
+                        cursor.execute(sql, (user_id, random.randint(
+                            1, 15), str(random.randint(80, 1000))))
+                    else:
+                        cursor.execute(sql, (user_id, random.randint(1, 15), str(
+                            f"{random.randint(0, 23):02}:{random.randint(0, 59):02}")))
+                    db.connection.commit()
+                    l.pop(rand)
+
+            data = get_table("user_category", cursor)
+            json_table = json.dumps(data, ensure_ascii=False, indent=2)
+            print(json_table)
+
     except Exception as e:
         print(f"Ошибка при добавлении пользователей: {e}")
     finally:
