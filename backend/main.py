@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import hashlib
 import uvicorn
 import json
-from TEHNODAYS.database.main import get_categories_tables
+from functions_on_db import get_categories_tables
 app = FastAPI()
 
 app.add_middleware(
@@ -79,6 +79,8 @@ ESPORTS = {
         3: [{"player": "Игрок1", "score": 500}, {"player": "Игрок2", "score": 480}],
     }
 }
+
+# ===DATABASE=== FATALL ERROR НЕ НАДО ТАК
 
 # === API ===
 
