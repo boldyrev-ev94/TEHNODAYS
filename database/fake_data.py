@@ -84,7 +84,7 @@ def main():
     VALUES (%s, %s, %s) 
                     """
                     l = [i for i in range(1, 15)]
-                    rand = random.randint(0, len(l))
+                    rand = random.randint(0, len(l)-1)
                     if CATEGORYLIST[rand][1] == "value":
                         cursor.execute(sql, (user_id, random.randint(
                             1, 15), str(random.randint(80, 1000))))
