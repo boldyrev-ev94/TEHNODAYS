@@ -1,4 +1,8 @@
 import random
+import psycopg2
+from psycopg2 import sql
+from db import Database
+import json
 
 
 def add_user(id):
