@@ -1,5 +1,3 @@
 psycopg2
 pydantic_settings
 pydantic
-asyncio
-psycopg2-binary
