@@ -43,7 +43,6 @@ CREATE TABLE IF NOT EXISTS {name_tabel} (
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     category_id INT REFERENCES categories(id) ON DELETE CASCADE,
     value VARCHAR(100),
-    PRIMARY KEY (user_id, category_id)
 );
 """
     return res
