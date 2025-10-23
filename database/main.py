@@ -92,10 +92,10 @@ WHERE categories.id = {id}
                 "name": key[1],
                 "items": res_list_users
             }
-            json_table = json.dumps(resaut, ensure_ascii=False, indent=2)
-            list_categories.append(json_table)
 
-        print(list_categories)
+            list_categories.append(resaut)
+        json_table = json.dumps(list_categories, ensure_ascii=False, indent=2)
+        print(json_table)
     return list_categories
 
 
