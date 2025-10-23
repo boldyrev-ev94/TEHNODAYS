@@ -26,11 +26,12 @@ def get_categorys_dict():
         # INNER JOIN categories ON categories.id = user_category.category_id
         # INNER JOIN users ON users.id = user_category.user_id
         # """
+        sql_query_list_category
         sql_query = f"""
-SELECT categories.id categories.name FROM user_category
+SELECT categories.id categories.name users.name users.surname  FROM user_category
 INNER JOIN categories ON categories.id = user_category.category_id
 INNER JOIN users ON users.id = user_category.user_id
-WHERE categories.name = '{name_category}'
+WHERE categories.name = 'SMS-T'
 """
         cursor.execute(sql_query)
         column_names = [desc[0] for desc in cursor.description]
