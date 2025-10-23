@@ -42,7 +42,7 @@ def create_user_categories_table(name_tabel):
 CREATE TABLE IF NOT EXISTS {name_tabel} (
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     category_id INT REFERENCES categories(id) ON DELETE CASCADE,
-    value VARCHAR(100),
+    value VARCHAR(100)
 );
 """
     return res
