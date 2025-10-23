@@ -95,8 +95,8 @@ WHERE categories.id = {id}
             json_table = json.dumps(resaut, ensure_ascii=False, indent=2)
             list_categories.append(json_table)
 
-        print(json_table)
-    return json_table
+        print(list_categories)
+    return list_categories
 
 
 def get_table(table_name, cursor):
