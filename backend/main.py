@@ -87,14 +87,14 @@ ESPORTS = {
 
 @app.get("/api/categories")
 def get_categories():
-    categories = get_categories_tables()
+    categories = functions_on_db.get_categories_tables()
     # print(categories)
     return [{"id": c["id"], "name": c["name"], "color": c.get("color", "#fff")} for c in categories]
 
 
 @app.get("/api/categories/{cat_id}/top10")
 def get_category_top10(cat_id: int):
-    categories = get_categories_tables()
+    categories = functions_on_db.get_categories_tables()
     if cat_id < 0 or cat_id >= len(categories):
         raise HTTPException(status_code=404)
     cat = categories[cat_id]
