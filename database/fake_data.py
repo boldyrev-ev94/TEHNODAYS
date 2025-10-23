@@ -3,6 +3,7 @@ import psycopg2
 from psycopg2 import sql
 from db import Database
 import json
+import datetime
 
 
 def add_user(id):
@@ -12,7 +13,7 @@ def add_user(id):
     mng_id = str(random.randint(1, 5))
     registrator_id = mng_id
     registrator_name = f"РЕГИСТРАТОР {mng_id}"
-    date_registr = "NOW()"
+    date_registr = datetime.now()
     sql = f"""
     INSERT INTO users (id_technopredki, name, surname, registrator_id, registrator_name, date_registr) 
     VALUES (%s, %s, %s, %s, %s, %s) 
