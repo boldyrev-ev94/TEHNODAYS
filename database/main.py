@@ -55,10 +55,10 @@ WHERE categories.id = {id}
             column_names = [desc[0] for desc in cursor.description]
             rows = cursor.fetchall()
             data = [dict(zip(column_names, row)) for row in rows]
-            data_json = json.dumps(data, ensure_ascii=False, indent=2)
+            # data_json = json.dumps(data, ensure_ascii=False, indent=2)
             value = ""
             toplist = []
-            for user in data_json:
+            for user in data:
                 print(user)
             #     if user['property'] == "value":
             #         value = int(user['value'])
