@@ -78,10 +78,10 @@ def main():
             print(json_table)
 
             for user_id in range(1, 20):
-                for count_category in range(1, random.randint(1, 14)):
+                for count_category in range(1, random.randint(1, 13)):
                     sql = """INSERT INTO user_category (user_id, category_id, value) VALUES (%s, %s, %s)"""
                     l = [i for i in range(1, 13)]
-                    rand = random.randint(0, len(l))
+                    rand = random.randint(0, len(l)-1)
                     if CATEGORYLIST[rand][1] == "value":
                         cursor.execute(
                             sql, (user_id, l[rand], str(random.randint(80, 1000))))
