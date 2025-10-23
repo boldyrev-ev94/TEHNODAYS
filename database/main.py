@@ -1,6 +1,5 @@
 import psycopg2
 from psycopg2 import sql
-from database_create import create_users_table, create_categories_table, create_user_categories_table
 from db import Database
 from model import User
 import json
