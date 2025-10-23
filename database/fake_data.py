@@ -54,7 +54,7 @@ def main():
                 sql_query = add_user(i)
                 print(sql_query)
                 cursor.execute(sql_query[0], sql_query[1])
-                # db.connection.commit()
+                db.connection.commit()
 
             data = get_table("users", cursor)
             json_table = json.dumps(
