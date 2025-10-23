@@ -67,7 +67,8 @@ WHERE categories.id = {id}
 
                 toplist.append({
                     "name": f"{user['surname']} {user['name']}",
-                    'value': value
+                    'value': value,
+                    "property": user['property']
                 })
 
             res_list_users = []
