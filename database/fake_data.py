@@ -15,9 +15,9 @@ def add_user(id):
     date_registr = "NOW()"
     sql = f"""
     INSERT INTO users (id_technopredki, name, surname, registrator_id, registrator_name, date_registr) 
-    VALUES ({id_technopredki}, {name}, {surname}, {registrator_id}, {registrator_name}, {date_registr}) 
+    VALUES (%s, %s, %s, %s, %s, %s) 
     """
-    return sql
+    return [sql, (id_technopredki, name, surname, registrator_id, registrator_name, date_registr)]
 
 
 def category_for_user():
@@ -52,7 +52,7 @@ def main():
             for i in range(20):
                 sql_query = add_user(i)
                 print(sql_query)
-                cursor.execute(sql_query)
+                cursor.execute(sql_query[0], sql_query[1])
                 # db.connection.commit()
 
             data = get_table("users", cursor)
