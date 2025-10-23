@@ -55,36 +55,36 @@ WHERE categories.id = {id}
             column_names = [desc[0] for desc in cursor.description]
             rows = cursor.fetchall()
             data = [dict(zip(column_names, row)) for row in rows]
-            print(json.dumps(data, ensure_ascii=False, indent=2))
+            data_json = json.dumps(data, ensure_ascii=False, indent=2)
             value = ""
             toplist = []
-            # for user in data:
-            #     print(user)
-            #     if user['property'] == "value":
-            #         value = int(user['value'])
-            #     else:
-            #         minute, sec = map(int, user['value'].split(':'))
-            #         value = minute * 60 + sec
+            for user in data:
+                print(user)
+                if user['property'] == "value":
+                    value = int(user['value'])
+                else:
+                    minute, sec = map(int, user['value'].split(':'))
+                    value = minute * 60 + sec
 
-            #     toplist.append({
-            #         "name": f"{user['surname']} {user['name']}",
-            #         'value': value
-            #     })
-            # res_list_users = []
-            # if user['property'] == "value":
-            #     res_list_users = sorted(
-            #         toplist, key=lambda x: x['value'], reverse=True)[:15]
-            # elif user['property'] == "time_up":
-            #     res_list_users = sorted(
-            #         toplist, key=lambda x: x['value'], reverse=True)[:15]
-            # else:
-            #     res_list_users = sorted(
-            #         toplist, key=lambda x: x['value'], reverse=True)[-15:]
+                toplist.append({
+                    "name": f"{user['surname']} {user['name']}",
+                    'value': value
+                })
+            res_list_users = []
+            if user['property'] == "value":
+                res_list_users = sorted(
+                    toplist, key=lambda x: x['value'], reverse=True)[:15]
+            elif user['property'] == "time_up":
+                res_list_users = sorted(
+                    toplist, key=lambda x: x['value'], reverse=True)[:15]
+            else:
+                res_list_users = sorted(
+                    toplist, key=lambda x: x['value'], reverse=True)[-15:]
 
             resaut = {
                 "id": id,
                 "name": key[1],
-                "items": "res_list_users"
+                "items": res_list_users
             }
             json_table = json.dumps(resaut, ensure_ascii=False, indent=2)
             list_categories.append(json_table)
