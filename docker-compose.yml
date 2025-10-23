@@ -1,6 +1,6 @@
 services:
   backend:
-    build: .
+    build: ./backend
     container_name: tehnodays-backend
     working_dir: /app
     command: python backend/main.py
