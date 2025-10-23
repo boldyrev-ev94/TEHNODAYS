@@ -78,18 +78,15 @@ def main():
             print(json_table)
 
             for user_id in range(1, 20):
-                for count_category in range(1, random.randint(1, 15)):
-                    sql = """
-                    INSERT INTO user_category (user_id, category_id, value) 
-    VALUES (%s, %s, %s) 
-                    """
-                    l = [i for i in range(1, 15)]
-                    rand = random.randint(0, len(l)-1)
+                for count_category in range(1, random.randint(1, 14)):
+                    sql = """INSERT INTO user_category (user_id, category_id, value) VALUES (%s, %s, %s)"""
+                    l = [i for i in range(1, 13)]
+                    rand = random.randint(0, len(l))
                     if CATEGORYLIST[rand][1] == "value":
-                        cursor.execute(sql, (user_id, random.randint(
-                            1, 15), str(random.randint(80, 1000))))
+                        cursor.execute(
+                            sql, (user_id, l[rand], str(random.randint(80, 1000))))
                     else:
-                        cursor.execute(sql, (user_id, random.randint(1, 15), str(
+                        cursor.execute(sql, (user_id, l[rand], str(
                             f"{random.randint(0, 23):02}:{random.randint(0, 59):02}")))
                     db.connection.commit()
                     l.pop(rand)
