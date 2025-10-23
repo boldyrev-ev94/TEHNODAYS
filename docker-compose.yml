@@ -30,8 +30,7 @@ services:
     image: postgres:latest
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+
 
 networks:
   tehnodays-net:
