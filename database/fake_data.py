@@ -10,8 +10,8 @@ def add_user(id):
     registrator_name = f"РЕГИСТРАТОР {mng_id}"
     date_registr = "NOW()"
     sql = f"""
-    INSERT INTO users (id_technopredki, name, surname, registrator_id, registrator_name, date_registr) 
-    VALUES ({id_technopredki}, {name}, {surname}, {registrator_id}, {registrator_name}, {date_registr}) RETURNING id,
+    INSERT users (id_technopredki, name, surname, registrator_id, registrator_name, date_registr) 
+    VALUES ({id_technopredki}, {name}, {surname}, {registrator_id}, {registrator_name}, {date_registr})
     """
     return sql
 
