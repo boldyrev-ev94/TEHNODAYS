@@ -32,9 +32,10 @@ def main():
     #     rows = cursor.fetchall()
     #     users = [json.dumps(User(*row).__dict__) for row in rows]
     #     print(users)
-    res = get_categories_tables()
-    json_table = json.dumps(res, ensure_ascii=False, indent=2)
-    print(json_table)
+    # res = get_categories_tables()
+    # json_table = json.dumps(res, ensure_ascii=False, indent=2)
+    # print(json_table)
+    pass
 
 
 def get_categorys_dict():
