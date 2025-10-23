@@ -58,7 +58,7 @@ WHERE categories.id = {id}
             data_json = json.dumps(data, ensure_ascii=False, indent=2)
             value = ""
             toplist = []
-            for user in data:
+            for user in data_json:
                 print(user)
                 if user['property'] == "value":
                     value = int(user['value'])
