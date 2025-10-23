@@ -59,28 +59,26 @@ WHERE categories.id = {id}
             value = ""
             toplist = []
             for user in data:
+                if user['property'] == "value":
+                    value = int(user['value'])
+                else:
+                    minute, sec = map(int, user['value'].split(':'))
+                    value = minute * 60 + sec
 
-                print(user)
-            #     if user['property'] == "value":
-            #         value = int(user['value'])
-            #     else:
-            #         minute, sec = map(int, user['value'].split(':'))
-            #         value = minute * 60 + sec
-
-            #     toplist.append({
-            #         "name": f"{user['surname']} {user['name']}",
-            #         'value': value
-            #     })
-            # res_list_users = []
-            # if user['property'] == "value":
-            #     res_list_users = sorted(
-            #         toplist, key=lambda x: x['value'], reverse=True)[:15]
-            # elif user['property'] == "time_up":
-            #     res_list_users = sorted(
-            #         toplist, key=lambda x: x['value'], reverse=True)[:15]
-            # else:
-            #     res_list_users = sorted(
-            #         toplist, key=lambda x: x['value'], reverse=True)[-15:]
+                toplist.append({
+                    "name": f"{user['surname']} {user['name']}",
+                    'value': value
+                })
+            res_list_users = []
+            if user['property'] == "value":
+                res_list_users = sorted(
+                    toplist, key=lambda x: x['value'], reverse=True)[:15]
+            elif user['property'] == "time_up":
+                res_list_users = sorted(
+                    toplist, key=lambda x: x['value'], reverse=True)[:15]
+            else:
+                res_list_users = sorted(
+                    toplist, key=lambda x: x['value'], reverse=True)[-15:]
 
             resaut = {
                 "id": id,
