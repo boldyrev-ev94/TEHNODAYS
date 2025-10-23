@@ -50,7 +50,9 @@ def main():
         db = Database()
         with db.get_cursor() as cursor:
             for i in range(20):
-                cursor.execute(add_users(i))
+                sql_query = add_users(i)
+                print(sql_query)
+                cursor.execute(sql_query)
                 # db.connection.commit()
 
             data = get_table("users", cursor)
