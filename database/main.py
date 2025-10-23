@@ -61,7 +61,7 @@ WHERE categories.id = {id}
             for user in data:
                 if user['property'] == "value":
                     value = int(user['value'])
-                else:
+                if user['property'] == "time_up" or user['property'] == "time_down":
                     minute, sec = map(int, user['value'].split(':'))
                     value = minute * 60 + sec
 
