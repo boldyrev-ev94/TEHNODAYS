@@ -89,7 +89,7 @@ WHERE categories.id = {id}
 
             resaut = {
                 "id": id,
-                "name": key[1],
+                "name": key[0],
                 "items": res_list_users
             }
 
