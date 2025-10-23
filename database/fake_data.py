@@ -14,7 +14,7 @@ def add_user(id):
     registrator_name = f"РЕГИСТРАТОР {mng_id}"
     date_registr = "NOW()"
     sql = f"""
-    INSERT users (id_technopredki, name, surname, registrator_id, registrator_name, date_registr) 
+    INSERT INTO users (id_technopredki, name, surname, registrator_id, registrator_name, date_registr) 
     VALUES ({id_technopredki}, {name}, {surname}, {registrator_id}, {registrator_name}, {date_registr})
     """
     return sql
@@ -50,7 +50,7 @@ def main():
         db = Database()
         with db.get_cursor() as cursor:
             for i in range(20):
-                sql_query = add_users(i)
+                sql_query = add_user(i)
                 print(sql_query)
                 cursor.execute(sql_query)
                 # db.connection.commit()
