@@ -62,8 +62,9 @@ WHERE categories.id = {id}
                 if user['property'] == "value":
                     value = int(user['value'])
                 if user['property'] == "time_up" or user['property'] == "time_down":
-                    minute, sec = map(int, user['value'].split(':'))
-                    value = minute * 60 + sec
+                    print(user['value'])
+                    # minute, sec = map(int, user['value'].split(':'))
+                    # value = minute * 60 + sec
 
                 toplist.append({
                     "name": f"{user['surname']} {user['name']}",
