@@ -1,9 +1,9 @@
 FROM python:3.12.3-slim
 
-WORKDIR /app
+WORKDIR /TEHNODAYS
 
-COPY . /app
-COPY .env /app/.env
+COPY . /TEHNODAYS
+COPY .env /TEHNODAYS/.env
 
 RUN apt-get update && \
 	apt-get install -y gcc libpq-dev python3-dev && \

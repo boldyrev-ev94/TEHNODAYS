@@ -2,10 +2,10 @@ services:
   backend:
     build: ./backend
     container_name: tehnodays-backend
-    working_dir: /app
+    working_dir: /TEHNODAYS
     command: python backend/main.py
     volumes:
-      - .:/app
+      - .:/TEHNODAYS
     networks:
       - tehnodays-net
     expose:
