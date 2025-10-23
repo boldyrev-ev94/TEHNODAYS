@@ -9,13 +9,13 @@ def add_user(id):
     id_technopredki = id
     name = f"Игрок {id}"
     surname = f"Фамилия {id}"
-    mng_id = str(random.randint(5))
+    mng_id = str(random.randint(1, 5))
     registrator_id = mng_id
     registrator_name = f"РЕГИСТРАТОР {mng_id}"
     date_registr = "NOW()"
     sql = f"""
     INSERT INTO users (id_technopredki, name, surname, registrator_id, registrator_name, date_registr) 
-    VALUES ({id_technopredki}, {name}, {surname}, {registrator_id}, {registrator_name}, {date_registr})
+    VALUES ({id_technopredki}, {name}, {surname}, {registrator_id}, {registrator_name}, {date_registr}) 
     """
     return sql
 
