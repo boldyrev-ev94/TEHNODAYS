@@ -24,20 +24,6 @@ CATEGORIES = [
 ]
 
 
-def main():
-    # db = Database()
-
-    # with db.get_cursor() as cursor:
-    #     cursor.execute("SELECT * FROM users")
-    #     rows = cursor.fetchall()
-    #     users = [json.dumps(User(*row).__dict__) for row in rows]
-    #     print(users)
-    # res = get_categories_tables()
-    # json_table = json.dumps(res, ensure_ascii=False, indent=2)
-    # print(json_table)
-    pass
-
-
 def get_categorys_dict():
     db = Database()
     with db.get_cursor() as cursor:
@@ -139,7 +125,3 @@ def get_table(table_name, cursor):
     except Exception as e:
         print(f"Ошибка при получении данных: {e}")
         return None
-
-
-if __name__ == "__main__":
-    main()
