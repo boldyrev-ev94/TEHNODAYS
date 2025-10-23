@@ -35,8 +35,9 @@ INNER JOIN users ON users.id = user_category.user_id
             "columns": column_names,
             "data": data
         }
-        print(resaut)
-    return resaut
+        json_table = json.dumps(data, ensure_ascii=False, indent=2)
+        print(json_table)
+    return json_table
 
 
 def get_table(table_name, cursor):
