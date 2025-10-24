@@ -417,7 +417,10 @@ const EsportsTable = () => {
     return ()=>{ mounted=false; };
   }, []);
 
-  const rows = dataByCat[String(categories[activeCat]?.id)] || [];
+  const rows = dataByCat[String(categories[0]?.id)] || [];
+  const rows2 = dataByCat[String(categories[1]?.id)] || [];
+  const rows3 = dataByCat[String(categories[2]?.id)] || [];
+  const rows4 = dataByCat[String(categories[3]?.id)] || [];
 
   return (
     <div className="card rightBottom" style={{borderColor:'#61b3dc'}}>
@@ -430,6 +433,27 @@ const EsportsTable = () => {
           <tbody>
             {rows.length===0 && <tr><td colSpan="3">Данных нет.</td></tr>}
             {rows.map((it,i)=>(
+              <tr key={i}>
+                <td>{it.name ?? '—'}</td>
+                <td>{it.player ?? '—'}</td>
+                <td>{it.score ?? '—'}</td>
+              </tr>
+            ))}
+            {rows2.map((it,i)=>(
+              <tr key={i}>
+                <td>{it.name ?? '—'}</td>
+                <td>{it.player ?? '—'}</td>
+                <td>{it.score ?? '—'}</td>
+              </tr>
+            ))}
+            {rows3.map((it,i)=>(
+              <tr key={i}>
+                <td>{it.name ?? '—'}</td>
+                <td>{it.player ?? '—'}</td>
+                <td>{it.score ?? '—'}</td>
+              </tr>
+            ))}
+            {rows4.map((it,i)=>(
               <tr key={i}>
                 <td>{it.name ?? '—'}</td>
                 <td>{it.player ?? '—'}</td>
