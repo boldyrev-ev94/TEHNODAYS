@@ -434,7 +434,7 @@ const EsportsTable = () => {
               <tr key={i}>
                 <td>{i+1}</td>
                 <td>{it.player ?? '—'}</td>
-                <td>{it.category ?? '—'}</td>
+                <td>{r.name ?? r.cat ?? '—'}</td>
               </tr>
             ))}
           </tbody>
