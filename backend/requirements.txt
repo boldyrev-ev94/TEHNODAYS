@@ -1,6 +1,2 @@
 fastapi
 uvicorn
-psycopg2-binary
-psycopg2
-pydantic_settings
-pydantic
