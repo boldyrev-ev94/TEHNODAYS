@@ -427,7 +427,7 @@ const EsportsTable = () => {
       </div>
       <div className="tableWrapper" style={{flex:1}}>
         <table className="leadersTable smallTable">
-          <thead><tr><th>#</th><th>Участник</th><th>Значение</th></tr></thead>
+          <thead><tr><th>#</th><th>Участник</th><th>Категория</th><th>Значение</th></tr></thead>
           <tbody>
             {rows.length===0 && <tr><td colSpan="3">Данных нет.</td></tr>}
             {rows.map((it,i)=>(
@@ -435,6 +435,7 @@ const EsportsTable = () => {
                 <td>{i+1}</td>
                 <td>{it.player ?? '—'}</td>
                 <td>{r.name ?? r.cat ?? '—'}</td>
+                <td>{(r.score!==undefined)?r.score:(r.value??'—')}</td>
               </tr>
             ))}
           </tbody>
