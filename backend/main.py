@@ -22,59 +22,59 @@ app.add_middleware(
 CATEGORIES = [
     {"id": 0, "name": "SMS-T",
         "items": [
-            "Иванов Иван"
+            "Цой Александр","Тимофеевна Наталья", "Уваров Глеб", "Попов Кирилл"
             ], "color": "#e74c3c"},
     {"id": 1, "name": "Карандаш кассета", "items": [
-        "Иванов Иван"
+        ""
         ], "color": "#3498db"},
     {"id": 2, "name": "Домашний телефон", "items": [
-        "Иванов Иван"
+        ""
         ], "color": "#2ecc71"},
     {"id": 3, "name": "Словарь без инета", "items": [
-        "Иванов Иван"
+        ""
         ], "color": "#f1c40f"},
     {"id": 4, "name": "Старый комп VS Новый", "items": [
-        "Иванов Иван"
+        ""
         ], "color": "#9b59b6"},
     {"id": 5, "name": "Железный конструктор", "items": [
-        "Иванов Иван"
+        ""
         ], "color": "#e67e22"},
     {"id": 6, "name": "Перо VS ручка VS Граф.планшет",
         "items": [
-            "Иванов Иван"
+            ""
             ], "color": "#1abc9c"},
     {"id": 7, "name": "Перемотать ДВД", "items": [
-        "Иванов Иван"
+        ""
         ], "color": "#34495e"},
     {"id": 8, "name": "За рулём", "items": [
-        "Иванов Иван"
+        ""
         ], "color": "#f39c12"},
     {"id": 9, "name": "НТО", "items": [
-        "Иванов Иван"
+        ""
         ], "color": "#7f8c8d"},
 ]
 
 LEADERS = [
     {"rank": 1, "name": "SMS-T", "category": "рекорд",
-        "score": 0, "user_name": "Иванов Иван"},
+        "score": 3, "user_name": "Цой Александр"},
     {"rank": 2, "name": "Карандаш кассета",
-        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
+        "category": "время (наименьшее)", "score": 0, "user_name": ""},
     {"rank": 3, "name": "Домашний телефон",
-        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
+        "category": "время (наименьшее)", "score": 0, "user_name": ""},
     {"rank": 4, "name": "Словарь без инета",
-        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
+        "category": "время (наименьшее)", "score": 0, "user_name": ""},
     {"rank": 5, "name": "Старый комп VS Новый",
-        "category": "рекорд", "score": 0, "user_name": "Иванов Иван"},
+        "category": "рекорд", "score": 0, "user_name": ""},
     {"rank": 6, "name": "Железный конструктор",
-        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
+        "category": "время (наименьшее)", "score": 0, "user_name": ""},
     {"rank": 7, "name": "Перо VS ручка VS Граф.планшет",
-        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
+        "category": "время (наименьшее)", "score": 0, "user_name": ""},
     {"rank": 8, "name": "Перемотать ДВД",
-        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
+        "category": "время (наименьшее)", "score": 0, "user_name": ""},
     {"rank": 9, "name": "За рулём",
-        "category": "время (наибольшее)", "score": 0, "user_name": "Иванов Иван"},
+        "category": "время (наибольшее)", "score": 0, "user_name": ""},
     {"rank": 10, "name": "НТО",
-        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
+        "category": "время (наименьшее)", "score": 0, "user_name": ""},
 ]
 
 ESPORTS = {
@@ -85,10 +85,10 @@ ESPORTS = {
         {"id": 3, "name": "Тетрис", "color": "#f1c40f"},
     ],
     "results": {
-        0: [{"player": "Иванов Иван", "score": 12}],
-        1: [{"player": "Иванов Иван", "score": 200}],
-        2: [{"player": "Иванов Иван", "score": 350}],
-        3: [{"player": "Иванов Иван", "score": 500}],
+        0: [{"player": "", "score": 12}],
+        1: [{"player": "", "score": 200}],
+        2: [{"player": "", "score": 350}],
+        3: [{"player": "", "score": 500}],
     }
 }
 
