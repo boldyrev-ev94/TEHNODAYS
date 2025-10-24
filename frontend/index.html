@@ -398,7 +398,6 @@ const RotatingTop10 = () => {
     </div>
   );
 };
-
 /* ---------------- ESPORTS ---------------- */
 const EsportsTable = () => {
   const [categories, setCategories] = useState([]);
@@ -419,18 +418,22 @@ const EsportsTable = () => {
     return () => { mounted = false; };
   }, []);
 
-  const combinedRows = categories
-    .map(cat => {
-      const rows = dataByCat[String(cat.id)] || [];
-      const first = rows[0];
-      return first ? { ...first, category: cat.name, color: cat.color } : null;
-    })
-    .filter(Boolean);
+  // 💡 Берём по 3 лучших результата из каждой категории
+  const combinedRows = categories.flatMap(cat => {
+    const rows = dataByCat[String(cat.id)] || [];
+    return rows.slice(0, 3).map((row) => ({
+      ...row,
+      category: cat.name,
+      color: cat.color
+    }));
+  });
 
   return (
     <div className="card rightBottom" style={{ borderColor: '#6284c2' }}>
       <div className="sectionHeader">
-        <span className="categoryLabel" style={{ borderColor: '#6284c2' }}>Киберспорт</span>
+        <span className="categoryLabel" style={{ borderColor: '#6284c2' }}>
+          Киберспорт
+        </span>
       </div>
       <div className="tableWrapper" style={{ flex: 1 }}>
         <table className="leadersTable smallTable">
@@ -438,7 +441,9 @@ const EsportsTable = () => {
             <tr><th>#</th><th>Категория</th><th>Игрок</th><th>Значение</th></tr>
           </thead>
           <tbody>
-            {combinedRows.length === 0 && <tr><td colSpan="4">Данных нет.</td></tr>}
+            {combinedRows.length === 0 && (
+              <tr><td colSpan="4">Данных нет.</td></tr>
+            )}
             {combinedRows.map((it, i) => (
               <tr key={i}>
                 <td>{i + 1}</td>
