@@ -401,65 +401,49 @@ const RotatingTop10 = () => {
 
 /* ---------------- ESPORTS ---------------- */
 const EsportsTable = () => {
-  const [categories,setCategories]=useState([]);
-  const [dataByCat,setDataByCat]=useState({});
+  const [categories, setCategories] = useState([]);
+  const [dataByCat, setDataByCat] = useState({});
   const api = useApi();
-  const activeCat=0;
 
-  useEffect(()=>{
-    let mounted=true;
-    const load = async ()=>{
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
       const data = await api.fetchJson('api/esports');
-      if(!mounted) return;
-      if(data && data.categories && data.results){
-        setCategories(data.categories.slice(0,1));
+      if (!mounted) return;
+      if (data && data.categories && data.results) {
+        setCategories(data.categories);
         setDataByCat(data.results);
       }
     };
     load();
-    return ()=>{ mounted=false; };
+    return () => { mounted = false; };
   }, []);
 
-  const rows = dataByCat[String(categories[0]?.id)] || [];
-  const rows2 = dataByCat[String(categories[1]?.id)] || [];
-  const rows3 = dataByCat[String(categories[2]?.id)] || [];
-  const rows4 = dataByCat[String(categories[3]?.id)] || [];
+  const combinedRows = categories
+    .map(cat => {
+      const rows = dataByCat[String(cat.id)] || [];
+      const first = rows[0];
+      return first ? { ...first, category: cat.name, color: cat.color } : null;
+    })
+    .filter(Boolean);
 
   return (
-    <div className="card rightBottom" style={{borderColor:'#61b3dc'}}>
+    <div className="card rightBottom" style={{ borderColor: '#6284c2' }}>
       <div className="sectionHeader">
-        <span className="categoryLabel" style={{borderColor:'#61b3dc'}}>Киберспорт</span>
+        <span className="categoryLabel" style={{ borderColor: '#6284c2' }}>Киберспорт</span>
       </div>
-      <div className="tableWrapper" style={{flex:1}}>
+      <div className="tableWrapper" style={{ flex: 1 }}>
         <table className="leadersTable smallTable">
-          <thead><tr><th>Название игры</th><th>Игрок</th><th>Значение</th></tr></thead>
+          <thead>
+            <tr><th>#</th><th>Категория</th><th>Игрок</th><th>Значение</th></tr>
+          </thead>
           <tbody>
-            {rows.length===0 && <tr><td colSpan="3">Данных нет.</td></tr>}
-            {rows.map((it,i)=>(
+            {combinedRows.length === 0 && <tr><td colSpan="4">Данных нет.</td></tr>}
+            {combinedRows.map((it, i) => (
               <tr key={i}>
-                <td>{it.name ?? '—'}</td>
-                <td>{it.player ?? '—'}</td>
-                <td>{it.score ?? '—'}</td>
-              </tr>
-            ))}
-            {rows2.map((it,i)=>(
-              <tr key={i}>
-                <td>{it.name ?? '—'}</td>
-                <td>{it.player ?? '—'}</td>
-                <td>{it.score ?? '—'}</td>
-              </tr>
-            ))}
-            {rows3.map((it,i)=>(
-              <tr key={i}>
-                <td>{it.name ?? '—'}</td>
-                <td>{it.player ?? '—'}</td>
-                <td>{it.score ?? '—'}</td>
-              </tr>
-            ))}
-            {rows4.map((it,i)=>(
-              <tr key={i}>
-                <td>{it.name ?? '—'}</td>
-                <td>{it.player ?? '—'}</td>
+                <td>{i + 1}</td>
+                <td style={{ color: it.color }}>{it.category}</td>
+                <td>{it.player || '—'}</td>
                 <td>{it.score ?? '—'}</td>
               </tr>
             ))}
