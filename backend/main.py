@@ -22,19 +22,19 @@ app.add_middleware(
 CATEGORIES = [
     {"id": 0, "name": "SMS-T",
         "items": [
-            "Цой Александр","Тимофеевна Наталья", "Уваров Глеб", "Попов Кирилл"
-            ], "color": "#e74c3c"},
+            "Цой Александр","Тимофеевна Наталья", "Уваров Глеб", "Попов Кирилл", "Балеев Гриша", "Копытова Елизавета", "Кологривов Захар","Жданов Андрей", "Коростелева Варвара"
+            ], "color": "#E4AFAF"},
     {"id": 1, "name": "Карандаш кассета", "items": [
         ""
         ], "color": "#3498db"},
     {"id": 2, "name": "Домашний телефон", "items": [
-        ""
+        "Копытова Елизавета", "Новикова  Светлана "
         ], "color": "#2ecc71"},
     {"id": 3, "name": "Словарь без инета", "items": [
-        ""
+        "Копытова  Елизавета", "Новикова Светлана"
         ], "color": "#f1c40f"},
     {"id": 4, "name": "Старый комп VS Новый", "items": [
-        ""
+        "Ольга Демьентева"
         ], "color": "#9b59b6"},
     {"id": 5, "name": "Железный конструктор", "items": [
         ""
@@ -55,26 +55,41 @@ CATEGORIES = [
 ]
 
 LEADERS = [
-    {"rank": 1, "name": "SMS-T", "category": "рекорд",
-        "score": 3, "user_name": "Цой Александр"},
-    {"rank": 2, "name": "Карандаш кассета",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
-    {"rank": 3, "name": "Домашний телефон",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
-    {"rank": 4, "name": "Словарь без инета",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
-    {"rank": 5, "name": "Старый комп VS Новый",
-        "category": "рекорд", "score": 0, "user_name": ""},
+    {"rank": 1, 
+     "name": "SMS-T", 
+     "category": "Цой Александр",
+     "score": 3, 
+     "user_name": ""},
+    {"rank": 2, 
+     "name": "Карандаш кассета",     
+     "category": "",
+     "score": 0, 
+     "user_name": ""},
+    {"rank": 3,
+     "name": "Домашний телефон",
+     "category": "Копытова Елизавета", 
+     "score": 2, 
+     "user_name": ""},
+    {"rank": 4,
+     "name": "Словарь без инета",
+     "category": "Копытова Елизавета",
+     "score": 3,
+     "user_name": ""},
+    {"rank": 5,
+     "name": "Старый комп VS Новый",
+    "category": "Копытова Елизавета",
+    "score": 2,
+    "user_name": ""},
     {"rank": 6, "name": "Железный конструктор",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
+        "category": "", "score": 0, "user_name": ""},
     {"rank": 7, "name": "Перо VS ручка VS Граф.планшет",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
+        "category": "", "score": 0, "user_name": ""},
     {"rank": 8, "name": "Перемотать ДВД",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
+        "category": "", "score": 0, "user_name": ""},
     {"rank": 9, "name": "За рулём",
-        "category": "время (наибольшее)", "score": 0, "user_name": ""},
+        "category": "", "score": 0, "user_name": ""},
     {"rank": 10, "name": "НТО",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
+        "category": "", "score": 0, "user_name": ""},
 ]
 
 ESPORTS = {
