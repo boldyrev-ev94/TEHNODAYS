@@ -10,6 +10,14 @@ services:
       - tehnodays-net
     expose:
       - "8000"
+    environment:
+      NAME_DB: ${NAME_DB}
+      PASSWORD_DB: ${PASSWORD_DB}
+      USER_DB: ${USER_DB}
+      HOST_DB: ${HOST_DB}
+      PORT_DB: 5432
+    depends_on:
+      - db
 
   nginx:
     image: nginx:stable-alpine
@@ -24,8 +32,19 @@ services:
     networks:
       - tehnodays-net
 
-
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${NAME_DB}
+      POSTGRES_USER: ${USER_DB}
+      POSTGRES_PASSWORD: ${PASSWORD_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
 networks:
   tehnodays-net:
     driver: bridge
+
+
+volumes:  # Добавьте это определение
+  postgres_data:
