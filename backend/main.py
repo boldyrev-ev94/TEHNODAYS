@@ -57,25 +57,25 @@ CATEGORIES = [
 
 LEADERS = [
     {"rank": 1, "name": "SMS-T", "category": "рекорд",
-        "score": 0, "user_name": ""},
+        "score": 0, "user_name": "Иванов Иван"},
     {"rank": 2, "name": "Карандаш кассета",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
+        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
     {"rank": 3, "name": "Домашний телефон",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
+        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
     {"rank": 4, "name": "Словарь без инета",
         "category": "время (наименьшее)", "score": 0, "user_name": ""},
     {"rank": 5, "name": "Старый комп VS Новый",
-        "category": "рекорд", "score": 0, "user_name": ""},
+        "category": "рекорд", "score": 0, "user_name": "Иванов Иван"},
     {"rank": 6, "name": "Железный конструктор",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
+        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
     {"rank": 7, "name": "Перо VS ручка VS Граф.планшет",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
+        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
     {"rank": 8, "name": "Перемотать ДВД",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
+        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
     {"rank": 9, "name": "За рулём",
-        "category": "время (наибольшее)", "score": 0, "user_name": ""},
+        "category": "время (наибольшее)", "score": 0, "user_name": "Иванов Иван"},
     {"rank": 10, "name": "НТО",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
+        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
 ]
 
 ESPORTS = {
@@ -86,10 +86,10 @@ ESPORTS = {
         {"id": 3, "name": "Тетрис", "color": "#f1c40f"},
     ],
     "results": {
-        # 0: [{"player": "Игрок1", "score": 12}, {"player": "Игрок2", "score": 15}],
-        # 1: [{"player": "Игрок1", "score": 200}, {"player": "Игрок2", "score": 180}],
-        # 2: [{"player": "Игрок1", "score": 350}, {"player": "Игрок2", "score": 330}],
-        # 3: [{"player": "Игрок1", "score": 500}, {"player": "Игрок2", "score": 480}],
+        0: [{"player": "Иванов Иван", "score": 12}],
+        1: [{"player": "Иванов Иван", "score": 200}],
+        2: [{"player": "Иванов Иван", "score": 350}],
+        3: [{"player": "Иванов Иван", "score": 500}],
     }
 }
 
