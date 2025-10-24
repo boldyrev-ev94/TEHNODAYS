@@ -12,7 +12,4 @@ RUN apt-get update && \
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# RUN ls -la /app
-# RUN ls -la /app/backend
-
 CMD ["python","-m", "backend/main.py"]
