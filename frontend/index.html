@@ -316,14 +316,13 @@ const LeadersTable = () => {
       <div className="sectionHeader"><span className="categoryLabel" style={{borderColor:'#61dca3'}}>Лидеры — все категории</span></div>
       <div className="tableWrapper" style={{flex:1}}>
         <table className="leadersTable">
-          <thead><tr><th>#</th><th>Игрок / Участник</th><th>Категория</th><th>Значение</th></tr></thead>
+          <thead><tr><th>#</th><th>Игрок / Участник</th><th>Категория</th></tr></thead>
           <tbody>
             {rows.length===0 && <tr><td colSpan="4">Нет данных.</td></tr>}
             {rows.map((r,idx)=>(
               <tr key={idx} className={idx===0?'tr-first':''}>
                 <td>{r.rank ?? (idx+1)}</td>
                 <td>{r.user_name ?? '—'}</td>
-                <td>{r.name ?? r.cat ?? '—'}</td>
                 <td>{(r.score!==undefined)?r.score:(r.value??'—')}</td>
               </tr>
             ))}
