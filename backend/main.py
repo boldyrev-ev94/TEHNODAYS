@@ -22,7 +22,7 @@ app.add_middleware(
 CATEGORIES = [
     {"id": 0, "name": "SMS-T",
         "items": [
-    
+            "Иванов Иван"
             ], "color": "#e74c3c"},
     {"id": 1, "name": "Карандаш кассета", "items": [
         "Иванов Иван"
@@ -45,7 +45,6 @@ CATEGORIES = [
             ], "color": "#1abc9c"},
     {"id": 7, "name": "Перемотать ДВД", "items": [
         "Иванов Иван"
-        
         ], "color": "#34495e"},
     {"id": 8, "name": "За рулём", "items": [
         "Иванов Иван"
@@ -63,7 +62,7 @@ LEADERS = [
     {"rank": 3, "name": "Домашний телефон",
         "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
     {"rank": 4, "name": "Словарь без инета",
-        "category": "время (наименьшее)", "score": 0, "user_name": ""},
+        "category": "время (наименьшее)", "score": 0, "user_name": "Иванов Иван"},
     {"rank": 5, "name": "Старый комп VS Новый",
         "category": "рекорд", "score": 0, "user_name": "Иванов Иван"},
     {"rank": 6, "name": "Железный конструктор",
