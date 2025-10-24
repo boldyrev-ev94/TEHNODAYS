@@ -57,7 +57,7 @@ CATEGORIES = [
 
 LEADERS = [
     {"rank": 1, "name": "SMS-T", "category": "рекорд",
-        "score": 123, "user_name": ""},
+        "score": 0, "user_name": ""},
     {"rank": 2, "name": "Карандаш кассета",
         "category": "время (наименьшее)", "score": 0, "user_name": ""},
     {"rank": 3, "name": "Домашний телефон",
