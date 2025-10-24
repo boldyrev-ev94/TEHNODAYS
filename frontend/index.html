@@ -70,26 +70,26 @@ html, body {
   overflow-x: hidden;
 }
 
+
 .sectionHeader {
-  font-size: 45px;
+  font-size: 28px;
   font-weight: bold;
   display: flex;
   align-items: center;
-  justify-content: center; /* <-- центрируем по горизонтали */
   gap: 10px;
 }
 
 table.leadersTable {
   width: 100%;
   border-collapse: collapse;
-  font-size: 21px;
+  font-size: 16px;
   color: white;
 }
 
 table.leadersTable th, table.leadersTable td {
-  padding: 15px 10px;
+  padding: 8px 10px;
   text-align: left;
-  border-bottom: 1px dashed rgba(255,255,255,0.2);
+  border-bottom: 1px dashed rgba(255,255,255,0.06);
   font-family: monospace;
 }
 
@@ -97,12 +97,12 @@ table.leadersTable th {
   position: sticky;
   top: 0;
   backdrop-filter: blur(6px);
-  background: rgba(0,0,0,0.1);
+  background: rgba(0,0,0,0.4);
   z-index: 2;
   font-weight: bold;
 }
 
-.smallTable td, .smallTable th { padding: 6px 8px; font-size: 21px; }
+.smallTable td, .smallTable th { padding: 6px 8px; font-size: 14px; }
 
 .tr-first {
   font-size: 18px;
@@ -112,10 +112,8 @@ table.leadersTable th {
 .categoryLabel {
   padding: 6px 12px;
   border-radius: 8px;
-  border: none;            /* убираем обводку */
-  display: block;          /* чтобы можно было центрировать */
-  text-align: center;      /* выравнивание текста по центру */
-  margin-bottom: 20px;
+  border: 3px solid;
+  display: inline-block;
 }
 
 canvas { position: absolute; inset: 0; z-index: 1; }
@@ -308,7 +306,7 @@ const LeadersTable = () => {
       }catch(e){ console.error(e); }
     };
     load();
-    const interval = setInterval(load,300000);
+    const interval = setInterval(load,30000);
     return ()=>{ mounted=false; clearInterval(interval); };
   }, []);
   return (
@@ -316,13 +314,14 @@ const LeadersTable = () => {
       <div className="sectionHeader"><span className="categoryLabel" style={{borderColor:'#61dca3'}}>Лидеры — все категории</span></div>
       <div className="tableWrapper" style={{flex:1}}>
         <table className="leadersTable">
-          <thead><tr><th>#</th><th>Участник</th><th>Категория</th></tr></thead>
+          <thead><tr><th>#</th><th>Игрок / Участник</th><th>Категория</th><th>Значение</th></tr></thead>
           <tbody>
             {rows.length===0 && <tr><td colSpan="4">Нет данных.</td></tr>}
             {rows.map((r,idx)=>(
               <tr key={idx} className={idx===0?'tr-first':''}>
                 <td>{r.rank ?? (idx+1)}</td>
-                <td>{r.user_name ?? '—'}</td>
+                <td>{r.name ?? r.player ?? '—'}</td>
+                <td>{r.category ?? r.cat ?? '—'}</td>
                 <td>{(r.score!==undefined)?r.score:(r.value??'—')}</td>
               </tr>
             ))}
@@ -384,7 +383,7 @@ const RotatingTop10 = () => {
       </div>
       <div className="tableWrapper" style={{flex:1}}>
         <table className="leadersTable smallTable">
-          <thead><tr><th>#</th><th>Участник</th><th>Значение</th></tr></thead>
+          <thead><tr><th>#</th><th>Игрок</th><th>Значение</th></tr></thead>
           <tbody>
             {items.length===0 && <tr><td colSpan="3">Данных нет.</td></tr>}
             {items.map((it,i)=>(
@@ -427,15 +426,14 @@ const EsportsTable = () => {
       </div>
       <div className="tableWrapper" style={{flex:1}}>
         <table className="leadersTable smallTable">
-          <thead><tr><th>#</th><th>Участник</th><th>Категория</th><th>Значение</th></tr></thead>
+          <thead><tr><th>#</th><th>Игрок</th><th>Значение</th></tr></thead>
           <tbody>
             {rows.length===0 && <tr><td colSpan="3">Данных нет.</td></tr>}
             {rows.map((it,i)=>(
               <tr key={i}>
                 <td>{i+1}</td>
                 <td>{it.player ?? '—'}</td>
-                <td>{r.name ?? r.cat ?? '—'}</td>
-                <td>{(r.score!==undefined)?r.score:(r.value??'—')}</td>
+                <td>{it.score ?? '—'}</td>
               </tr>
             ))}
           </tbody>
