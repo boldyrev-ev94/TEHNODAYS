@@ -200,24 +200,24 @@ ESPORTS = {
     ],
     "results": {
         0: [
-            {"name": "Гонки", "player": "", "score": "1:30"},
-            {"name": "Гонки", "player": "", "score": "1:35"},
-            {"name": "Гонки", "player": "", "score": "2:05"},
+            {"name": "Гонки", "player": "", "score": ""},
+            {"name": "Гонки", "player": "", "score": ""},
+            {"name": "Гонки", "player": "", "score": ""},
         ],
         1: [
-            {"name": "Пакман", "player": "", "score": 2750},
-            {"name": "Пакман", "player": "", "score": 1470},
+            {"name": "Пакман", "player": "", "score": ""},
+            {"name": "Пакман", "player": "", "score": ""},
             {"name": "Пакман", "player": "", "score": ""}
         ],
         2: [
-            {"name": "Fruit ninja", "player": "", "score": 350},
-            {"name": "Fruit ninja", "player": "", "score": 350},
-            {"name": "Fruit ninja", "player": "", "score": 350}
+            {"name": "Fruit ninja", "player": "", "score": ""},
+            {"name": "Fruit ninja", "player": "", "score": ""},
+            {"name": "Fruit ninja", "player": "", "score": ""}
         ],
         3: [
-            {"name": "Тетрис", "player": "", "score": 104638},
-            {"name": "Тетрис", "player": "", "score": 12879},
-            {"name": "Тетрис", "player": "", "score": 11071},
+            {"name": "Тетрис", "player": "", "score": ""},
+            {"name": "Тетрис", "player": "", "score": ""},
+            {"name": "Тетрис", "player": "", "score": ""},
         ],
     }
 }
