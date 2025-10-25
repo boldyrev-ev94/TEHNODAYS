@@ -41,6 +41,7 @@ CATEGORIES = [
 
 
 
+
         ], "color": "#E4AFAF"},
     {"id": 1, "name": "Карандаш кассета",
         "items": [
@@ -61,6 +62,7 @@ CATEGORIES = [
 
 
 
+
         ], "color": "#2ecc71"},
     {"id": 3, "name": "Словарь без инета",
         "items": [
@@ -75,6 +77,7 @@ CATEGORIES = [
 "Альгина Арина",
 "Холод дмитрий ",
 
+
         ], "color": "#f1c40f"},
     {"id": 4, "name": "Старый комп VS Новый",
         "items": [
@@ -84,6 +87,8 @@ CATEGORIES = [
 "Бахтеев Тимофей",
 "Кушнир Алиса",
 "Кушнир Александр ",
+"Утюжников Тиртха ",
+
 
 
         ], "color": "#9b59b6"},
@@ -205,14 +210,20 @@ ESPORTS = {
             {"name": "Пакман", "player": "", "score": ""}
         ],
         2: [
-            {"name": "Fruit ninja", "player": "", "score": ""},
-            {"name": "Fruit ninja", "player": "", "score": ""},
-            {"name": "Fruit ninja", "player": "", "score": ""}
+            {"name": "Fruit ninja", "player": "Кушнир Александр "
+, "score": 1400},
+            {"name": "Fruit ninja", "player": "Флоленко Паша"
+, "score": 1056},
+            {"name": "Fruit ninja", "player": "Флоленко Денис"
+, "score": 972}
         ],
         3: [
-            {"name": "Тетрис", "player": "", "score": ""},
-            {"name": "Тетрис", "player": "", "score": ""},
-            {"name": "Тетрис", "player": "", "score": ""},
+            {"name": "Тетрис", "player": "Кушнир Александр "
+, "score": 6720},
+            {"name": "Тетрис", "player": "Флоленко Паша"
+, "score": 6224},
+            {"name": "Тетрис", "player": "Флоленко Денис"
+, "score": 6088},
         ],
     }
 }
